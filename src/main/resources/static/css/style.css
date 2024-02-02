@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+/* 전체 레이아웃 크기 */
+#wrap {width:1200px;}
+header {height:80px;}
+.contents {min-height:300px;}
+nav {height:50px;}
+footer {height: 100px;}
+
+.small-size-div {width:800px;}
+
+/* a, a:hover 데코 설정 */
+a, a:hover {text-decoration:none;}
+
+/* header 부분 css */
+#honey {color:#FAC62B;}
+#apple {color:#f15a22;}
+.sign-in-out {color:#777; text-decoration:underline;}
+.sign-in-out:hover {color:#AAA; text-decoration:none;}
+
+/* 게시물 Card css */
+.card-size {width:230px;}
