@@ -13,6 +13,7 @@ public class MainPageController {
 	@GetMapping("/honey-apple")
 	public String honeyApple(Model model) {
 		model.addAttribute("viewName", "mainpage/homepage");
+		model.addAttribute("titleName", "꿀사과마켓");
 		return "template/layout";
 	}
 }

@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>꿀사과마켓</title>
+<title>${titleName}</title>
 <%-- jQuery --%>
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <%-- 부트스트랩 --%>
@@ -24,7 +24,7 @@
 		
 		<%-- 검색창(일부 페이지만 존재) --%>
 		<nav>
-			<jsp:include page="../include/nav-search.jsp" />
+			<jsp:include page="../include/navSearch.jsp" />
 		</nav>
 		
 		<%-- section --%>

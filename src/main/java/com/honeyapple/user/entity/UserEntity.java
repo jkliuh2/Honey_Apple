@@ -1,4 +1,4 @@
-package com.honeyapple.user;
+package com.honeyapple.user.entity;
 
 import java.time.ZonedDateTime;
 
