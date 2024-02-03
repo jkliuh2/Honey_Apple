@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping("/honey-apple/user")
+@RequestMapping("/user")
 @Controller
 public class UserController {
 // view 컨트롤러
