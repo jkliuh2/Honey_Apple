@@ -14,9 +14,11 @@
 			<input type="text" id="loginId" class="form-control col-8" placeholder="아이디를 입력하세요.">
 			<button type="button" id="loginIdCheckBtn" class="btn btn-info col-2">중복확인</button>
 		</div>
-		<%-- 아이디 중복확인 메세지 --%>
+		<%-- 아이디 관련 메세지 --%>
 		<div class="mt-2">
-			<small class="text-danger">중복된 아이디입니다.</small>
+			<small id="loginIdlength" class="text-danger d-none">아이디는 4자 이상, 20자 이하만 가능합니다.</small>
+			<small id="duplTrue" class="duplLoginIdCheckMessage text-danger d-none">중복된 아이디입니다.</small>
+			<small id="duplFalse" class="duplLoginIdCheckMessage text-success d-none">사용가능한 아이디입니다.</small>
 		</div>
 	</div>
 	
@@ -77,6 +79,69 @@
 <script>
 	$(document).ready(function() {
 		
+		// 로그인아이디 입력
+		$('#loginId').on('change', function() {
+			$('#loginIdlength').addClass('d-none');
+			$('.duplLoginIdCheckMessage').addClass('d-none');
+			
+			let loginId = $(this).val().trim();
+			if (!loginId) {
+				return;
+			} else if (loginId.length < 4) {
+				$('#loginIdlength').removeClass('d-none');
+			} else if (loginId.length > 20) {
+				$('#loginIdlength').removeClass('d-none');
+			}
+		});// 로그인아이디 change 끝
+		
+		// 로그인아이디 중복확인 버튼클릭
+		$('#loginIdCheckBtn').on('click', function() {
+			//alert("아이디 중복");
+			
+			$('.duplLoginIdCheckMessage').addClass('d-none');
+			
+			let loginId = $('#loginId').val().trim();
+			
+			// 아이디 길이 확인
+			if (!$('#loginIdlength').hasClass('d-none')) {
+				// 길이가 너무 짧음
+				alert("아이디의 길이가 맞지 않습니다.");
+				$('#loginId').focus();
+				return;
+			} else if (!loginId) {
+				// 아이디 미입력
+				alert("아이디를 입력하세요.");
+				$('#loginId').focus();
+				return;
+			}
+			
+			// AJAX 중복확인
+			$.ajax({
+				type:"GET"
+				, url:"/user/is-duplicated-loginId"
+				, data:{"loginId":loginId}
+				, success:function(data) {
+					if (data.code == 200) {
+						if (data.is_duplicated_loginId) {
+							// 성공 + 중복
+							$('#duplTrue').removeClass('d-none');
+							$('#loginId').focus();
+						} else {
+							// 성공 + 중복X
+							$('#duplFalse').removeClass('d-none');
+						}
+					} else {
+						// DB 접근 실패
+						alert(data.error_message);
+					}
+				}
+				, error:function(request, status, error) {
+					alert("중복확인에 실패했습니다. 관리자에게 문의해주새요.");
+				}
+			});
+			
+		}); // 로그인아이디 중복확인
+		
 		// 회원가입
 		$('#signUpBtn').on('click', function() {
 			//alert("회원가입");
@@ -93,11 +158,18 @@
 				$('#loginId').focus();
 				return;
 			}
+			if ($('#duplFalse').hasClass('d-none')) {
+				alert("아이디 중복확인을 해주세요.");
+				$('#loginIdCheckBtn').focus();
+				return;
+			}
+			
 			if (!nickname) {
 				alert("닉네임을 입력하세요.");
 				$('#nickname').focus();
 				return;
 			}
+			
 			if (!password) {
 				alert("비밀번호를 입력하세요.");
 				$('#password').focus();
@@ -115,6 +187,7 @@
 				$('#password').focus();
 				return;
 			}
+			
 			if (!email) {
 				alert("이메일을 입력하세요.");
 				$('#email').focus();

@@ -6,4 +6,5 @@ import com.honeyapple.user.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
+	public UserEntity findByLoginId(String loginId);
 }

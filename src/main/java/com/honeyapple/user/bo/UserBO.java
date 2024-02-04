@@ -33,4 +33,9 @@ public class UserBO {
 		// insert + return
 		return userEntity == null ? null : userEntity;
 	}
+	
+	// loginId로 select
+	public UserEntity getUserEntityByLoginId(String loginId) {
+		return userRepository.findByLoginId(loginId);
+	}
 }

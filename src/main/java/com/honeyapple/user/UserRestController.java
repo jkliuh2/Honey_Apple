@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,6 +44,29 @@ public class UserRestController {
 			result.put("code", 500);
 			result.put("error_message", "회원정보를 DB에 저장하는데 실패했습니다.");
 		}
+		return result;
+	}
+	
+	
+	// loginId 중복확인 API
+	@GetMapping("/is-duplicated-loginId")
+	public Map<String, Object> isDuplicatedLoginId(
+			@RequestParam("loginId") String loginId) {
+		
+		// DB select
+		UserEntity user = userBO.getUserEntityByLoginId(loginId);
+		
+		// 응답값
+		Map<String, Object> result = new HashMap<>();
+		if (user != null) {
+			// 중복O
+			result.put("code", 200);
+			result.put("is_duplicated_loginId", true);
+		} else {
+			result.put("code", 200);
+			result.put("is_duplicated_loginId", false);
+		}
+		
 		return result;
 	}
 }
