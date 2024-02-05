@@ -41,34 +41,37 @@
 		<input type="password" id="password" class="form-control col-8" placeholder="비밀번호">
 		<%-- 비밀번호 메시지 --%>
 		<div class="mt-2">
-			<small class="text-danger">비밀번호가 너무 짧습니다.</small>
+			<small id="password4Word" class="passwordMessage text-danger d-none">비밀번호가 너무 짧습니다.</small>
 		</div>
 	</div>
 	
 	<%-- 비밀번호 확인 영역 --%>
 	<div class="height-70-box">
 		<input type="password" id="passwordCheck" class="form-control col-8" placeholder="비밀번호 확인">
-		<%-- 비밀번호 확인 메시지 --%>
-		<div class="mt-2">
-			<small class="text-danger">비밀번호가 일치하지 않습니다.</small>
-		</div>
 	</div>
 	
 	<%-- 이메일 영역 --%>
 	<div class="height-70-box">
-		<div class="d-flex">
-			<input type="text" id="emailId" class="form-control col-4" placeholder="이메일을 입력하세요.">
-			<div class="mx-1 d-flex align-items-center">
-				@
+		<label id="emailInputSelectBox" class="w-100">
+			<div class="d-flex">
+				<input type="text" id="emailId" class="form-control col-4" placeholder="이메일을 입력하세요.">
+					@
+				<select id="emailDomain" class="col-4 form-control">
+					<option selected>naver.com</option>
+					<option>gmail.com</option>
+					<option>nate.com</option>
+					<option>kakao.com</option>
+					<option value="directInput">--직접 입력--</option>
+				</select>
 			</div>
-			<select id="emailDomain" class="col-4 form-control">
-				<option selected>naver.com</option>
-				<option>gmail.com</option>
-				<option>nate.com</option>
-				<option>kakao.com</option>
-				<option>--직접 입력--</option>
-			</select>
-		</div>
+		</label>
+		
+		<%-- 이메일 직접 입력 --%>
+		<label id="emailDirectBox" class="w-100 d-none">
+			<div>
+				<input type="text" id="emailDirectInput" class="form-control col-8" placeholder="이메일을 입력하세요.">
+			</div>
+		</label>
 	</div>
 	
 	<%-- submit 버튼 --%>
@@ -79,6 +82,28 @@
 
 <script>
 	$(document).ready(function() {
+		
+		// 이메일 직접입력
+		$('#emailDomain').on('change', function() {
+			//alert("이메일 선택");
+			let domain = $(this).val();
+			if (domain == "directInput") {
+				$('#emailInputSelectBox').addClass('d-none');
+				$('#emailDirectBox').removeClass('d-none');
+			}
+		}); // 이메일 선택이벤트 끝
+		
+		
+		// 비밀번호 입력 이벤트
+		$('#password').on('change', function() {
+			$('.passwordMessage').addClass('d-none');
+			let password = $('#password').val();
+			
+			if (password.length < 4) {
+				$('#password4Word').removeClass('d-none');
+			}
+		});
+		
 		
 		// 닉네임 input 글자 쓰기(중복확인 닉네임 메시지 지우기)
 		$('#nickname').on('change', function() {
@@ -196,8 +221,6 @@
 			let nickname = $('#nickname').val().trim();
 			let password = $('#password').val();
 			let passwordCheck = $('#passwordCheck').val();
-			let emailId = $('#emailId').val().trim();
-			let email = emailId + "@" + $('#emailDomain').val();
 			
 			if (!loginId) {
 				alert("아이디를 입력하세요.");
@@ -239,10 +262,26 @@
 				return;
 			}
 			
-			if (!emailId) {
-				alert("이메일을 입력하세요.");
-				$('#emailId').focus();
-				return;
+			// 이메일 validation check + 변수 가져오기
+			let email;
+			let emailDomain = $('#emailDomain').val();
+			if (emailDomain == "directInput") {
+				// 직접 입력
+				email = $('#emailDirectInput').val().trim();
+				if (!email) {
+					alert("이메일을 직접 입력하세요.");
+					$('#emailDirectInput').focus();
+					return;
+				}
+			} else {
+				// 입력 + 도메인 선택
+				let emailId = $('#emailId').val().trim();
+				if (!emailId) {
+					alert("이메일 아이디를 입력하세요.");
+					$('#emailId').focus();
+					return;
+				}
+				email = emailId + "@" + emailDomain;
 			}
 			
 			// AJAX - INSERT
