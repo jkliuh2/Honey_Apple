@@ -1,5 +1,7 @@
 package com.honeyapple.user;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +33,8 @@ public class UserRestController {
 	 * @param password
 	 * @param email
 	 * @return
+	 * @throws UnsupportedEncodingException 
+	 * @throws NoSuchAlgorithmException 
 	 */
 	@PostMapping("/sign-up")
 	public Map<String, Object> signUp(
@@ -38,10 +42,10 @@ public class UserRestController {
 			@RequestParam("nickname") String nickname,
 			@RequestParam("password") String password,
 			@RequestParam("email") String email
-			) {
+			) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		
 		// 비밀번호 hashing
-		String hashedPassword = EncryptUtils.md5(password);
+		String hashedPassword = EncryptUtils.shaAndHex(password, "SHA-256");
 		
 		// DB insert
 		UserEntity user = userBO.addUser(loginId, nickname, hashedPassword, email);
@@ -119,10 +123,10 @@ public class UserRestController {
 	public Map<String, Object> signIn(
 			@RequestParam("loginId") String loginId,
 			@RequestParam("password") String password,
-			HttpSession session) {
+			HttpSession session) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		
 		// 비밀번호 암호화
-		String hashedPassword = EncryptUtils.md5(password);
+		String hashedPassword = EncryptUtils.shaAndHex(password, "SHA-256");
 		
 		Map<String, Object> result = new HashMap<>();
 		
@@ -138,7 +142,7 @@ public class UserRestController {
 			// 세션에 회원정보 저장
 			session.setAttribute("userId", user.getId());
 			session.setAttribute("userLoginId", user.getLoginId());
-			session.setAttribute("nickname", user.getNickname());
+			session.setAttribute("userNickname", user.getNickname());
 		} else {
 			// 로그인 실패
 			user = userBO.getUserEntityByLoginId(loginId); // 아이디는 맞는가?

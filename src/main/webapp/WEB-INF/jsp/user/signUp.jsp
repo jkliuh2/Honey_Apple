@@ -293,7 +293,7 @@
 				, success:function(data) {
 					if (data.code == 200) {
 						alert("환영합니다!");
-						
+						location.href="/user/sign-in-view";
 					} else {
 						alert(data.error_message);
 					}
