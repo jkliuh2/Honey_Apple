@@ -19,4 +19,14 @@ public class UserController {
 		model.addAttribute("titleName", "회원가입");
 		return "template/layout";
 	}
+	
+	
+	// 로그인 view
+	// url: http://localhost/user/sign-in-view
+	@GetMapping("/sign-in-view")
+	public String signInView(Model model) {
+		model.addAttribute("viewName", "user/signIn");
+		model.addAttribute("titleName", "로그인");
+		return "template/layout";
+	}
 }

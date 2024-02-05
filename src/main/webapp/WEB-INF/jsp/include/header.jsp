@@ -14,6 +14,6 @@
 
 	<%-- 로그인 --%>
 	<div class="col-1 d-flex justify-content-center align-items-center">
-		<a href="#" class="sign-in-out"> 로그인 </a>
+		<a href="/user/sign-in-view" class="sign-in-out"> 로그인 </a>
 	</div>
 </div>

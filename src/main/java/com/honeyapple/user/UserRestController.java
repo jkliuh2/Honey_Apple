@@ -14,6 +14,8 @@ import com.honeyapple.common.EncryptUtils;
 import com.honeyapple.user.bo.UserBO;
 import com.honeyapple.user.entity.UserEntity;
 
+import jakarta.servlet.http.HttpSession;
+
 @RequestMapping("/user")
 @RestController
 public class UserRestController {
@@ -21,7 +23,15 @@ public class UserRestController {
 	@Autowired
 	private UserBO userBO;
 
-	// 회원가입 API
+	/**
+	 * 회원가입 API
+	 * 
+	 * @param loginId
+	 * @param nickname
+	 * @param password
+	 * @param email
+	 * @return
+	 */
 	@PostMapping("/sign-up")
 	public Map<String, Object> signUp(
 			@RequestParam("loginId") String loginId,
@@ -48,7 +58,12 @@ public class UserRestController {
 	}
 	
 	
-	// loginId 중복확인 API
+	/**
+	 * 로그인 아이디 중복확인 API
+	 * 
+	 * @param loginId
+	 * @return
+	 */
 	@GetMapping("/is-duplicated-loginId")
 	public Map<String, Object> isDuplicatedLoginId(
 			@RequestParam("loginId") String loginId) {
@@ -71,7 +86,12 @@ public class UserRestController {
 	}
 	
 	
-	// 닉네임 중복확인 API
+	/**
+	 * 닉네임 중복확인 API
+	 * 
+	 * @param nickname
+	 * @return
+	 */
 	@GetMapping("/is-duplicated-nickname")
 	public Map<String, Object> isDuplicatedNickname(
 			@RequestParam("nickname") String nickname) {
@@ -90,6 +110,50 @@ public class UserRestController {
 			result.put("is_duplicated_nickname", false);
 		}
 				
+		return result;
+	}
+	
+	
+	// 로그인 API
+	@PostMapping("/sign-in")
+	public Map<String, Object> signIn(
+			@RequestParam("loginId") String loginId,
+			@RequestParam("password") String password,
+			HttpSession session) {
+		
+		// 비밀번호 암호화
+		String hashedPassword = EncryptUtils.md5(password);
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		// DB select + 응답값
+		UserEntity user = userBO.getUserEntityByLoginIdPassword(loginId, hashedPassword);
+		if (user != null) {
+			// 로그인 성공
+			
+			// model에 담기 
+			result.put("code", 200);
+			result.put("login_message", user.getNickname() + "님 환영합니다!");
+			
+			// 세션에 회원정보 저장
+			session.setAttribute("userId", user.getId());
+			session.setAttribute("userLoginId", user.getLoginId());
+			session.setAttribute("nickname", user.getNickname());
+		} else {
+			// 로그인 실패
+			user = userBO.getUserEntityByLoginId(loginId); // 아이디는 맞는가?
+			
+			if (user != null) {
+				// 아이디는 존재.
+				result.put("code", 500);
+				result.put("error_message", "비밀번호가 일치하지 않습니다.");
+			} else {
+				// 아이디도 없음.
+				result.put("code", 500);
+				result.put("error_message", "아이디가 존재하지 않습니다..");
+			}
+		}
+		
 		return result;
 	}
 }
