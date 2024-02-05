@@ -38,4 +38,9 @@ public class UserBO {
 	public UserEntity getUserEntityByLoginId(String loginId) {
 		return userRepository.findByLoginId(loginId);
 	}
+	
+	// 닉네임으로 select
+	public UserEntity getUserEntityByNickname(String nickname) {
+		return userRepository.findByNickname(nickname);
+	}
 }

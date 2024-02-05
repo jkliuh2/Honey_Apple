@@ -69,4 +69,27 @@ public class UserRestController {
 		
 		return result;
 	}
+	
+	
+	// 닉네임 중복확인 API
+	@GetMapping("/is-duplicated-nickname")
+	public Map<String, Object> isDuplicatedNickname(
+			@RequestParam("nickname") String nickname) {
+		
+		// DB select
+		UserEntity user = userBO.getUserEntityByNickname(nickname);
+				
+		// 응답값
+		Map<String, Object> result = new HashMap<>();
+		if (user != null) {
+			// 중복O
+			result.put("code", 200);
+			result.put("is_duplicated_nickname", true);
+		} else {
+			result.put("code", 200);
+			result.put("is_duplicated_nickname", false);
+		}
+				
+		return result;
+	}
 }

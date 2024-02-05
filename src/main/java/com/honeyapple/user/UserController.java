@@ -12,7 +12,7 @@ public class UserController {
 
 	
 	// 회원가입 view
-	// url: http://localhost/honey-apple/user/sign-up-view
+	// url: http://localhost/user/sign-up-view
 	@GetMapping("/sign-up-view")
 	public String signUpView(Model model) {
 		model.addAttribute("viewName", "user/signUp");
