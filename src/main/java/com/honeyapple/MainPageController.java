@@ -8,12 +8,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainPageController {
 
 	
-	// 홈페이지 화면
-	// url: http://localhost/honey-apple
+	/**
+	 * 메인페이지 view
+	 * http://localhost/honey-apple
+	 * 권한검사X
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/honey-apple")
 	public String honeyApple(Model model) {
 		model.addAttribute("viewName", "mainpage/homepage");
 		model.addAttribute("titleName", "꿀사과마켓");
+		model.addAttribute("nav", "검색");
 		return "template/layout";
 	}
 }

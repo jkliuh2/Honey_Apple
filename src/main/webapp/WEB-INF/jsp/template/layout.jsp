@@ -23,9 +23,11 @@
 		</header>
 		
 		<%-- 검색창(일부 페이지만 존재) --%>
+		<c:if test="${nav eq '검색'}">
 		<nav>
 			<jsp:include page="../include/navSearch.jsp" />
 		</nav>
+		</c:if>
 		
 		<%-- section --%>
 		<section class="contents d-flex justify-content-center">

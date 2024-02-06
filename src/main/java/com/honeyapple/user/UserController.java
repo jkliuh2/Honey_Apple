@@ -12,9 +12,14 @@ import jakarta.servlet.http.HttpSession;
 public class UserController {
 // view 컨트롤러
 
-	
-	// 회원가입 view
-	// url: http://localhost/user/sign-up-view
+
+	/**
+	 * 회원가입 view
+	 * http://localhost/user/sign-up-view
+	 * 비-로그인 상태 only
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/sign-up-view")
 	public String signUpView(Model model) {
 		model.addAttribute("viewName", "user/signUp");
@@ -23,8 +28,13 @@ public class UserController {
 	}
 	
 	
-	// 로그인 view
-	// url: http://localhost/user/sign-in-view
+	/**
+	 * 로그인 view
+	 * http://localhost/user/sign-in-view
+	 * 비-로그인 상태 only
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/sign-in-view")
 	public String signInView(Model model) {
 		model.addAttribute("viewName", "user/signIn");
@@ -33,7 +43,12 @@ public class UserController {
 	}
 	
 	
-	// 로그아웃
+	/**
+	 * 로그아웃
+	 * 
+	 * @param session
+	 * @return
+	 */
 	@RequestMapping("/sign-out")
 	public String signOut(HttpSession session) {
 		session.removeAttribute("userId");
