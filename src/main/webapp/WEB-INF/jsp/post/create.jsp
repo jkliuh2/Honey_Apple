@@ -34,19 +34,19 @@
 		<div class="my-3">
 			<p>- 이미지 파일 업로드(최소 1개의 사진이 필요합니다.)</p>
 			<div id="img1-box" class="mb-2">
-				*파일 1 : <input type="file" id="imgFile1" class="img-input" name="imgFile1" accept=".jpg, .png, .gif, .jpeg">
+				*파일 1 : <input type="file" id="imgFile1" class="img-input" accept=".jpg, .png, .gif, .jpeg">
 			</div>
 			<div id="img2-box" class="mb-2 d-none">
-				파일 2 : <input type="file" id="imgFile2" class="img-input" name="imgFile2" accept=".jpg, .png, .gif, .jpeg">
+				파일 2 : <input type="file" id="imgFile2" class="img-input" accept=".jpg, .png, .gif, .jpeg">
 			</div>
 			<div id="img3-box" class="mb-2 d-none">
-				파일 3 : <input type="file" id="imgFile3" class="img-input" name="imgFile3" accept=".jpg, .png, .gif, .jpeg">
+				파일 3 : <input type="file" id="imgFile3" class="img-input" accept=".jpg, .png, .gif, .jpeg">
 			</div>
 			<div id="img4-box" class="mb-2 d-none">
-				파일 4 : <input type="file" id="imgFile4" class="img-input" name="imgFile4" accept=".jpg, .png, .gif, .jpeg">
+				파일 4 : <input type="file" id="imgFile4" class="img-input" accept=".jpg, .png, .gif, .jpeg">
 			</div>
 			<div id="img5-box" class="mb-2 d-none">
-				파일 5 : <input type="file" id="imgFile5" class="img-input" name="imgFile5" accept=".jpg, .png, .gif, .jpeg">
+				파일 5 : <input type="file" id="imgFile5" class="img-input" accept=".jpg, .png, .gif, .jpeg">
 			</div>
 		</div>
 		
@@ -141,7 +141,6 @@
 				$('#subject').focus();
 				return false;
 			}
-			alert("subject 검사 통과."); ///////////////////////////////
 			
 			let content = $('#content').val();
 			if (!content) {
@@ -149,37 +148,27 @@
 				$('#content').focus();
 				return false;
 			}
-			alert("content 검사 통과"); ////////////////////////////////
 			
-			//let fileName1 = $('#imgFile1').val();
-			//let fileName2 = $('#imgFile2').val();
-			//let fileName3 = $('#imgFile3').val();
-			//let fileName4 = $('#imgFile4').val();
-			//let fileName5 = $('#imgFile5').val();
+			// 이미지 파일 유효성 검사(+ 확장자명 검사)
 			for (let i = 1; i <= 5; i++) {
-				alert("이미지 for문 진입"); ///////////////////////////////////////
 				let fileId = "#imgFile" + i;
-				alert("fileId:" + fileId); //////////////////////////////
 				let fileName = $(fileId).val();
-				alert("fileName:" + fileName); ////////////////////////////
-				// 최소 1장은 업로드 해야 함.
-				if (i = 1 && !fileName) {
-					alert("최소 한 장의 상품 이미지는 업로드해야 합니다.");
-					return false;
-				}
-				alert("file1번 검사완료"); /////////////////////////////////////
 				
+				// 최소 1장은 업로드 해야 함.
 				if (!fileName) {
-					return;
+					if (i == 1) {
+						alert("최소 한 장의 상품 이미지는 업로드해야 합니다.");
+						return false;
+					}
+					// 2번부터 파일 비어있으면 반복문 탈출(확장자명 검사 X)
+					break;
 				}
 				
 				// 파일 확장자명 검사
-				//accept=".jpg, .png, .gif, .jpeg"
 				let extension = fileName.split(".").pop().toLowerCase();
-		
 				if ($.inArray(extension, ['jpg', 'png', 'gif', 'jpeg']) == -1) {
-					alert("이미지 파일만 업로드 할 수 있습니다.");
-					$(fileId).val(""); // 실패한 파일 비우기
+					alert(i + "번 파일 업로드 실패 : 이미지 파일만 업로드 할 수 있습니다.");
+					$(fileId).focus();
 					return false;
 				}
 			}
@@ -193,14 +182,19 @@
 				return false;
 			}
 			price = (price * 1000);
+			alert(price);
 			
 			// negotiable
 			let negotiable = 0;
 			if ($('#negotiable').is(':checked')) {
+				// 체크 되었으면 1
 				negotiable = 1;
 			}
 			
-			return false;
+			return false; // 임시용. submit 막기
+			
+			// ajax - INSERT
+			
 		}); // submit 이벤트 끝
 	}); // 레디이벤트 끝
 </script>
