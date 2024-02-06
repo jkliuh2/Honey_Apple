@@ -141,6 +141,7 @@
 				$('#subject').focus();
 				return false;
 			}
+			alert("subject 검사 통과."); ///////////////////////////////
 			
 			let content = $('#content').val();
 			if (!content) {
@@ -148,6 +149,7 @@
 				$('#content').focus();
 				return false;
 			}
+			alert("content 검사 통과"); ////////////////////////////////
 			
 			//let fileName1 = $('#imgFile1').val();
 			//let fileName2 = $('#imgFile2').val();
@@ -155,13 +157,17 @@
 			//let fileName4 = $('#imgFile4').val();
 			//let fileName5 = $('#imgFile5').val();
 			for (let i = 1; i <= 5; i++) {
+				alert("이미지 for문 진입"); ///////////////////////////////////////
 				let fileId = "#imgFile" + i;
+				alert("fileId:" + fileId); //////////////////////////////
 				let fileName = $(fileId).val();
+				alert("fileName:" + fileName); ////////////////////////////
 				// 최소 1장은 업로드 해야 함.
 				if (i = 1 && !fileName) {
 					alert("최소 한 장의 상품 이미지는 업로드해야 합니다.");
 					return false;
 				}
+				alert("file1번 검사완료"); /////////////////////////////////////
 				
 				if (!fileName) {
 					return;
