@@ -182,7 +182,6 @@
 				return false;
 			}
 			price = (price * 1000);
-			alert(price);
 			
 			// negotiable
 			let negotiable = 0;
@@ -190,8 +189,7 @@
 				// 체크 되었으면 1
 				negotiable = 1;
 			}
-			
-			return false; // 임시용. submit 막기
+
 			
 			// ajax - INSERT
 			// params : (변수화O) subject, content, price, negotiable / (변수화X) imgFile1~5 
@@ -210,6 +208,10 @@
 				type:"POST"
 				, url:"/post/create"
 				, data:formData
+				, enctype:"multipart/form-data"
+				, processData:false
+				, contentType:false
+				
 				, success:function(data) {
 					if (data.code == 200) {
 						// 성공
