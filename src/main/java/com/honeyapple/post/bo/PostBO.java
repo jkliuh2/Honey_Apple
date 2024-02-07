@@ -23,8 +23,8 @@ public class PostBO {
 	
 
 	// C
-	// input: params / output: Post
-	public Post addPost(
+	// input: params / output: Integer(postId pk값)
+	public int addPost(
 			int userId, String userLoginId, String subject, String content, int price, int negotiable,
 			MultipartFile imgFile1, MultipartFile imgFile2, MultipartFile imgFile3,
 			MultipartFile imgFile4, MultipartFile imgFile5
@@ -59,12 +59,13 @@ public class PostBO {
 		post.setNegotiable(negotiable);
 		post.setContent(content);
 		post.setImgPath1(imgPathList.get(0));
-		post.setImgPath1(imgPathList.get(1));
-		post.setImgPath1(imgPathList.get(2));
-		post.setImgPath1(imgPathList.get(3));
-		post.setImgPath1(imgPathList.get(4));
+		post.setImgPath2(imgPathList.get(1));
+		post.setImgPath3(imgPathList.get(2));
+		post.setImgPath4(imgPathList.get(3));
+		post.setImgPath5(imgPathList.get(4));
 		
 		// DB insert + 리턴
-		return postMapper.insertPost(post);
+		postMapper.insertPost(post);
+		return post.getId();
 	}
 }

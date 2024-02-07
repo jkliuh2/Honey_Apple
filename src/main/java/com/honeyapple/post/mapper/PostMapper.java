@@ -8,5 +8,5 @@ import com.honeyapple.post.domain.Post;
 public interface PostMapper {
 
 	// insert
-	public Post insertPost(Post post);
+	public void insertPost(Post post);
 }

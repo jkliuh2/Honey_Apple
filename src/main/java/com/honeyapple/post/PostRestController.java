@@ -45,14 +45,14 @@ public class PostRestController {
 		String userLoginId = (String)session.getAttribute("userLoginId");
 		
 		// DB insert
-		Post post = postBO.addPost(userId, userLoginId, subject, content, price, negotiable,
+		int postId = postBO.addPost(userId, userLoginId, subject, content, price, negotiable,
 				imgFile1, imgFile2, imgFile3, imgFile4, imgFile5);
 		
 		// 응답값
 		Map<String, Object> result = new HashMap<>();
-		if (post != null) {
+		if (postId > 0) {
 			result.put("code", 200);
-			result.put("postId", post.getId());
+			result.put("postId", postId);
 		} else {
 			result.put("code", 500);
 			result.put("error_message", "DB insert에 실패했습니다.");
