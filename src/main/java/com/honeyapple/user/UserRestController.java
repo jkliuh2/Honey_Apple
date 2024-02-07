@@ -41,7 +41,8 @@ public class UserRestController {
 			@RequestParam("loginId") String loginId,
 			@RequestParam("nickname") String nickname,
 			@RequestParam("password") String password,
-			@RequestParam("email") String email
+			@RequestParam("email") String email,
+			HttpSession session
 			) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		
 		// 비밀번호 hashing
@@ -53,7 +54,13 @@ public class UserRestController {
 		// 응답값
 		Map<String, Object> result = new HashMap<>();
 		if (user != null) {
+			// 회원가입 성공
 			result.put("code", 200);
+			
+			// 로그인 처리
+			session.setAttribute("userId", user.getId());
+			session.setAttribute("userLoginId", user.getLoginId());
+			session.setAttribute("userNickname", user.getNickname());
 		} else {
 			result.put("code", 500);
 			result.put("error_message", "회원정보를 DB에 저장하는데 실패했습니다.");

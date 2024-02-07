@@ -292,8 +292,8 @@
 					"password":password, "email":email}
 				, success:function(data) {
 					if (data.code == 200) {
-						alert("환영합니다!");
-						location.href="/user/sign-in-view";
+						alert("회원가입을 환영합니다!");
+						location.href="/honey-apple";
 					} else {
 						alert("회원가입 실패 : " + data.error_message);
 					}
