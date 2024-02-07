@@ -75,7 +75,7 @@
 						location.href="/honey-apple";
 					} else if (data.code == 500) {
 						// 로그인 실패 (아이디 존재 or 아예 없음)
-						alert(data.error_message);
+						alert("로그인 실패 : " + data.error_message);
 						$('#password').val("");
 					}
 				}

@@ -194,6 +194,34 @@
 			return false; // 임시용. submit 막기
 			
 			// ajax - INSERT
+			// params : (변수화O) subject, content, price, negotiable / (변수화X) imgFile1~5 
+			let formData = new FormData();
+			formData.append("subject", subject);
+			formData.append("content", content);
+			formData.append("price", price);
+			formData.append("negotiable", negotiable);
+			formData.append("imgFile1", $('#imgFile1')[0].files[0]);
+			formData.append("imgFile2", $('#imgFile2')[0].files[0]);
+			formData.append("imgFile3", $('#imgFile3')[0].files[0]);
+			formData.append("imgFile4", $('#imgFile4')[0].files[0]);
+			formData.append("imgFile5", $('#imgFile5')[0].files[0]);
+			
+			$.ajax({
+				type:"POST"
+				, url:"/post/create"
+				, data:formData
+				, success:function(data) {
+					if (data.code == 200) {
+						// 성공
+						location.href="/post/post-detail-view?postId=" + data.postId;
+					} else {
+						alert("게시글 생성 실패 : " + data.error_message);
+					}
+				}
+				, error:function(request, status, error) {
+					alert("게시글 생성에 실패했습니다. 관리자에게 문의해주세요.");
+				}
+			}); // ajax 끝
 			
 		}); // submit 이벤트 끝
 	}); // 레디이벤트 끝

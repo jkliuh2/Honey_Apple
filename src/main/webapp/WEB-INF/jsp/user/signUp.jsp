@@ -295,7 +295,7 @@
 						alert("환영합니다!");
 						location.href="/user/sign-in-view";
 					} else {
-						alert(data.error_message);
+						alert("회원가입 실패 : " + data.error_message);
 					}
 				}
 				, error:function(request, status, error) {
