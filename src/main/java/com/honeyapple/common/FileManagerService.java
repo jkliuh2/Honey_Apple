@@ -18,7 +18,7 @@ public class FileManagerService {
 	// 학원용
 	public static final String FILE_UPLOAD_PATH = "D:\\SEOJAVA\\7_honeyapple\\HoneyApple\\workspace\\images/";
 	// 집 용
-//		public static final String FILE_UPLOAD_PATH = "C:\\Users\\appli\\OneDrive\\Desktop\\6Week\\JAVA\\6_Spring_project\\SNS\\sns_workspace\\images/";
+//		public static final String FILE_UPLOAD_PATH = "C:\\Users\\appli\\OneDrive\\Desktop\\6Week\\JAVA\\7_Honey_Apple\honey_apple\workspace\images/";
 
 	// input:Flie 원본, userLoginId(폴더명) / output: 이미지 경로
 	public String saveFile(String loginId, MultipartFile file) {
