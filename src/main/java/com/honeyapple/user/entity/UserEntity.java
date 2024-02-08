@@ -42,7 +42,8 @@ public class UserEntity {
 	
 	private String hometown;
 	
-	private Double temperature;
+	@Builder.Default
+	private Double temperature = 36.5;
 	
 	private String type;
 	
