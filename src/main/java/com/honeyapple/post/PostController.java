@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping("/post")
 @Controller
@@ -24,14 +23,4 @@ public class PostController {
 		return "template/layout";
 	}
 	
-	
-	// 글 상세 view
-	@GetMapping("/post-detail-view")
-	public String postDetailView(
-			@RequestParam("postId") int postId,
-			Model model) {
-		model.addAttribute("viewName", "post/postDetail");
-		model.addAttribute("titleName", "꿀템글");
-		return "template/layout";
-	}
 }

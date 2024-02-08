@@ -21,7 +21,6 @@ public class PostBO {
 	private FileManagerService fileManagerService;
 	
 	
-
 	// C
 	// input: params / output: Integer(postId pk값)
 	public int addPost(
@@ -67,5 +66,11 @@ public class PostBO {
 		// DB insert + 리턴
 		postMapper.insertPost(post);
 		return post.getId();
+	}
+	
+	
+	// select by postId
+	public Post getPostById(int postId) {
+		return postMapper.selectPostById(postId);
 	}
 }

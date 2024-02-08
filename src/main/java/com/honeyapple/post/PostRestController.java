@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.honeyapple.post.bo.PostBO;
-import com.honeyapple.post.domain.Post;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -23,8 +22,21 @@ public class PostRestController {
 	private PostBO postBO;
 	
 
-	
-	// 글 생성 API
+	/**
+	 * 글 생성 API
+	 * (로그인 only)
+	 * @param subject
+	 * @param price
+	 * @param negotiable
+	 * @param content
+	 * @param imgFile1
+	 * @param imgFile2
+	 * @param imgFile3
+	 * @param imgFile4
+	 * @param imgFile5
+	 * @param session
+	 * @return
+	 */
 	@PostMapping("/create")
 	public Map<String, Object> create(
 			@RequestParam("subject") String subject,
@@ -41,7 +53,7 @@ public class PostRestController {
 		// request params : (변수화O) subject, content, price, negotiable / (변수화X) imgFile1~5
 		
 		// 세션의 유저 정보 가져오기
-		Integer userId = (Integer)session.getAttribute("userId");
+		int userId = (int)session.getAttribute("userId");
 		String userLoginId = (String)session.getAttribute("userLoginId");
 		
 		// DB insert

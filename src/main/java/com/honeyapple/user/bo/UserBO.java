@@ -38,15 +38,17 @@ public class UserBO {
 	public UserEntity getUserEntityByLoginId(String loginId) {
 		return userRepository.findByLoginId(loginId);
 	}
-	
 	// 닉네임으로 select
 	public UserEntity getUserEntityByNickname(String nickname) {
 		return userRepository.findByNickname(nickname);
 	}
-	
 	// loginId + 비밀번호 select
 	// input: loginId, password(hashing) / output:UserEntity
 	public UserEntity getUserEntityByLoginIdPassword(String loginId, String password) {
 		return userRepository.findByLoginIdAndPassword(loginId, password);
+	}
+	// id로 select
+	public UserEntity getUserEntityById(int id) {
+		return userRepository.findById(id).orElse(null);
 	}
 }

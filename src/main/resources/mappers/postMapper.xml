@@ -38,4 +38,24 @@
  		, NOW()
  	)
  	</insert>
+ 	
+ 	<select id="selectPostById" resultType="com.honeyapple.post.domain.Post">
+ 	SELECT
+ 		`id`
+		,`sellerId`
+		,`subject`
+		,`price`
+		,`negotiable`
+		,`content`
+		,`imgPath1`
+		,`imgPath2`
+		,`imgPath3`
+		,`imgPath4`
+		,`imgPath5`
+		,`status`
+		,`createdAt`
+		,`updatedAt`
+ 	FROM
+ 		`post`
+ 	</select>
  </mapper>

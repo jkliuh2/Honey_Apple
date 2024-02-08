@@ -9,4 +9,7 @@ public interface PostMapper {
 
 	// insert
 	public void insertPost(Post post);
+	
+	// select by postId
+	public Post selectPostById(int postId);
 }

@@ -6,23 +6,30 @@
 <div class="w-50 mt-5">
 	<%-- 이미지(1~5개) --%>
 	<div class="d-flex justify-content-center">
-		<img src="/static/img/test-img.webp" alt="게시물 이미지" width="450">
+		<img src="${article.post.imgPath1}" alt="게시물 이미지" width="500">
 	</div>
 	
 	<%-- 판매자 정보 --%>
-	<div class="d-flex align-items-center">
+	<div class="d-flex align-items-center mt-3">
 		<%-- 판매자 프로필이미지 --%>
 		<div class="col-2">
-			<img src="/static/img/blank-profile.webp" alt="판매자 프로필 이미지" width="60" height="60">
+			<c:choose>
+			<c:when test="${not empty article.user.profileImagePath}">
+				<img src="${article.user.profileImagePath}" alt="판매자 프로필 이미지" width="60" height="60">
+			</c:when>
+			<c:otherwise>
+				<img src="/static/img/blank-profile.webp" alt="판매자 프로필 이미지" width="60" height="60">
+			</c:otherwise>
+			</c:choose>
 		</div>
 		
 		<%-- 판매자 nickname, hometown --%>
 		<div class="col-7">
 			<div class="font-weight-bold">
-				sellerNickname
+				${article.user.nickname}
 			</div>
 			<div>
-				sellerhometown
+				${article.user.hometown} : 아직 미정
 			</div>
 		</div>
 		
@@ -32,7 +39,7 @@
 				매너온도
 			</div>
 			<div class="font-weight-bold">
-				36.5℃
+				${article.user.temperature}
 			</div>
 		</div>
 	</div>
@@ -41,18 +48,20 @@
 	
 	<%-- 여기부터 post 내용들 --%>
 	<%-- 글 제목 --%>
-	<h3>글 제목</h3>
+	<h3>${article.post.subject}</h3>
 	
 	<%-- 가격, 네고여부 --%>
 	<div class="font-22px font-weight-bold">
-		70,000원 네고가능
+		<%-- price --%>
+		<span>70,000원</span> 
+		
+		<%-- negotiable --%>
+		<span>네고가능</span>
 	</div>
 	
 	<%-- 글 내용 --%>
 	<div class="my-3">
-		내용내용ㄴ어ㅣㅇㄴ머이ㅏㅇ머
-		엄니엉나ㅣㅁ
-		ㅇㅁ어ㅏ님언미ㅏㅇㅁ
+		${article.post.content}
 	</div>
 	
 	<%-- 관심(+조회수) --%>
@@ -82,6 +91,7 @@
 		<%-- 거래 제안하기(구매자용) or 제안 목록(판매자용) --%>
 		<div class="col-6">
 			<a href="#" class="btn btn-primary form-control">거래 제안하기</a>
+			<a href="#" class="btn btn-primary form-control d-none">거래 제안목록</a>
 		</div>
 		
 		<%-- 수정버튼(판매자용) --%>
