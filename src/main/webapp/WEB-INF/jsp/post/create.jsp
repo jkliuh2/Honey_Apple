@@ -215,7 +215,7 @@
 				, success:function(data) {
 					if (data.code == 200) {
 						// 성공
-						location.href="/post/post-detail-view?postId=" + data.postId;
+						location.href="/article/detail-view?postId=" + data.postId;
 					} else {
 						alert("게시글 생성 실패 : " + data.error_message);
 					}

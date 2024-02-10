@@ -39,7 +39,7 @@
 				매너온도
 			</div>
 			<div class="font-weight-bold">
-				${article.user.temperature}
+				${article.user.temperature}°C
 			</div>
 		</div>
 	</div>
@@ -53,15 +53,22 @@
 	<%-- 가격, 네고여부 --%>
 	<div class="font-22px font-weight-bold">
 		<%-- price --%>
-		<span>70,000원</span> 
+		<span>
+			<fmt:formatNumber value="${article.post.price}" />원
+		</span> 
 		
 		<%-- negotiable --%>
-		<span>네고가능</span>
+		<c:if test="${article.post.negotiable eq 1}">
+			<span class="text-success">네고가능</span>
+		</c:if>
+		<c:if test="${article.post.negotiable eq 0}">
+			<span class="text-danger">네고불가</span>
+		</c:if>
 	</div>
 	
 	<%-- 글 내용 --%>
 	<div class="my-3">
-		${article.post.content}
+		<pre>${article.post.content}</pre>
 	</div>
 	
 	<%-- 관심(+조회수) --%>
