@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.honeyapple.article.domain.Article;
+import com.honeyapple.interest.bo.InterestBO;
 import com.honeyapple.post.bo.PostBO;
 import com.honeyapple.post.domain.Post;
 import com.honeyapple.user.bo.UserBO;
@@ -17,6 +18,9 @@ public class ArticleBO {
 	
 	@Autowired
 	private UserBO userBO;
+	
+	@Autowired
+	private InterestBO interestBO;
 
 	
 /////////////////////////////////////////////// 
@@ -36,8 +40,15 @@ public class ArticleBO {
 		article.setUser(user);
 		
 		// 관심 Count
+		int interestCount = interestBO.getInterestCountByPostId(postId);
+		article.setInterestCount(interestCount);
 		
 		// 관심 여부 (하트표시, userId 없으면 무조건 꺼짐상태) 
+		boolean filledHeart = false;
+		if (userId != null) {
+			filledHeart = interestBO.filledHeart(postId, userId);
+		}
+		article.setFilledHeart(filledHeart);
 		
 		// 채팅방 갯수
 		

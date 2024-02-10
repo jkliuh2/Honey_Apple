@@ -25,9 +25,10 @@
 		
 		<%-- 판매자 nickname, hometown --%>
 		<div class="col-7">
-			<div class="font-weight-bold">
+			<a href="/profile/selling-list-view?userId=${article.user.id}" 
+			class="font-weight-bold text-dark">
 				${article.user.nickname}
-			</div>
+			</a>
 			<div>
 				${article.user.hometown} : 아직 미정
 			</div>
@@ -73,7 +74,7 @@
 	
 	<%-- 관심(+조회수) --%>
 	<small class="text-secondary">
-		- 관심 10
+		- 관심 ${article.interestCount}
 	</small>
 	
 	<hr>
@@ -90,8 +91,15 @@
 	<div class="mt-5 d-flex align-items-center">
 		<%-- 관심 버튼(구매자용) --%>
 		<div class="col-3 d-flex justify-content-center">
-			<a href="#">
-				<img src="/static/img/empty-heart.png" width="35" height="35">
+			<a href="#" id="interestToggle">
+				<img src="/static/img/
+				<c:if test="${article.filledHeart eq false}">
+				empty
+				</c:if>
+				<c:if test="${article.filledHeart}">
+				fill
+				</c:if>
+				-heart.png" width="35" height="35">
 			</a>
 		</div>
 		
@@ -107,3 +115,35 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	$(document).ready(function() {
+		
+		// 관심 토글버튼
+		$('#interestToggle').on('click', function(e) {
+			e.preventDefault(); // <a> 페이지 올라가기 방지
+			//alert("관심!");
+			let postId = ${article.post.id}
+			
+			$.ajax({
+				url:"/interest/" + postId
+				
+				, success:function(data) {
+					if (data.code == 200) {
+						// 토글 성공시 => 새로고침
+						location.reload();
+					} else if (data.code == 300) {
+						// 로그인 만료시
+						alert(data.error_message);
+						location.href="/user/sign-in-view";
+					} else {
+						alert(data.error_message);
+					}
+				}
+				, error:function(request, status, error) {
+					alert("오류가 발생했습니다. 관리자에게 문의해주세요.");
+				}
+			});//ajax 끝
+		}); // 관심 토글이벤트 끝
+	}); // 레디이벤트 끝
+</script>

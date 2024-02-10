@@ -15,9 +15,9 @@ public class Article {
 	
 	private UserEntity user; // 판매자(글쓴이) 정보
 	
-	// 관심 Count
+	private int interestCount; // 관심 숫자
 	
-	// 관심 토글(로그인된 유저가 이 게시글을 관심눌렀는? 여부)
+	private boolean filledHeart; // 관심 여부(로그인된 유저가 이 게시글을 관심눌렀는? 여부)
 	
 	// 채팅방 갯수(판매자를 위한 정보)
 }
