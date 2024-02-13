@@ -78,7 +78,9 @@
 	<form method="post" action="/chat/enter-message">
 	<div class="mt-3 d-flex justify-content-between">
 		<div class="col-2">
-			<button type="button" class="btn btn-secondary form-control">예약</button>
+			<c:if test="${not empty chatRoom.id || userId == post.sellerId}">
+				<button type="button" class="btn btn-secondary form-control">예약</button>
+			</c:if>
 		</div>
 		<div class="col-7 input-group">
 			<input type="text" id="content" name="content" class="form-control" placeholder="내용을 입력하세요.">
