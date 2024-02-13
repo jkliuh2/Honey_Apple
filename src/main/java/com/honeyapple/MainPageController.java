@@ -11,7 +11,6 @@ public class MainPageController {
 	/**
 	 * 메인페이지 view
 	 * http://localhost/honey-apple
-	 * 권한검사X
 	 * @param model
 	 * @return
 	 */

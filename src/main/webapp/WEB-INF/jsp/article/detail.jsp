@@ -105,7 +105,10 @@
 		
 		<%-- 거래 제안하기(구매자용) or 제안 목록(판매자용) --%>
 		<div class="col-6">
-			<a href="#" class="btn btn-primary form-control">거래 제안하기</a>
+			<%-- 채팅방으로 이동(구매자전용, 비-로그인도 보임) --%>
+			<a href="/chat/chat-room-view?postId=${article.post.id}" class="btn btn-primary form-control">거래 제안하기</a>
+			
+			<%-- 채팅목록으로 이동(판매자전용) --%>
 			<a href="#" class="btn btn-primary form-control d-none">거래 제안목록</a>
 		</div>
 		

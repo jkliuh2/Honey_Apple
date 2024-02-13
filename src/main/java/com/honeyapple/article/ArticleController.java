@@ -28,7 +28,7 @@ public class ArticleController {
 			HttpSession session,
 			Model model) {
 		
-		// 세션에서 로그인된 유저 정보 가져오기
+		// 세션에서 로그인된 유저 정보 가져오기 - (비-로그인도 볼 수 있음)
 		Integer userId = (Integer)session.getAttribute("userId");
 		
 		// DB select (Article)

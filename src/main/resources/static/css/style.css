@@ -29,3 +29,27 @@ a, a:hover {text-decoration:none;}
 
 /* post-detail css */
 .font-24px {font-size:22px;}
+
+/* chat-room css */
+#chat-room-header {height:100px;}
+#chat-message-section {min-height: 400px;}
+
+#chat-message-section > * {
+	padding:0;
+	margin:0;
+}
+#chat-message-section > ul > li {list-style:none;}
+.my-message {min-height:60px;}
+.you-message {min-height:60px;}
+.message {
+	color:white;
+	word-break:break-all;
+	max-width:50%;
+	padding: 5px 10px;
+	border-radius:10px;
+	margin:0 20px;
+}
+.my-message > .message {background-color:#04B431;}
+.you-message > .message {background-color:#6E6E6E;}
+
+#contentBtn {width:80px;}
