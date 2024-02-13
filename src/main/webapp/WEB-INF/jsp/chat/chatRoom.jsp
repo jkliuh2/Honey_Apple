@@ -54,16 +54,16 @@
 		<c:forEach items="${chatMessageList}" var="chatMessage">
 			<c:choose>
 				<c:when test="${chatMessage.sellerId eq userId || chatMessage.buyerId eq userId}">
-					<li>
+					<li class="mt-1">
 						<div class="my-message d-flex justify-content-end">
-							<div class="message d-flex align-items-center justify-content-center">내 메시지</div>
+							<div class="message d-flex align-items-center justify-content-center">${chatMessage.content}</div>
 						</div>
 					</li>
 				</c:when>
 				<c:otherwise>
-					<li>
+					<li class="mt-1">
 						<div class="you-message d-flex justify-content-front">
-							<div class="message d-flex align-items-center justify-content-center">상대방 메시지</div>
+							<div class="message d-flex align-items-center justify-content-center">${chatMessage.content}</div>
 						</div>
 					</li>
 				</c:otherwise>
@@ -75,19 +75,34 @@
 	<hr>
 	
 	<%-- 예약 및 입력칸 --%>
+	<form method="post" action="/chat/enter-message">
 	<div class="mt-3 d-flex justify-content-between">
 		<div class="col-2">
 			<button type="button" class="btn btn-secondary form-control">예약</button>
 		</div>
 		<div class="col-7 input-group">
-			<form method="post" action="/chat/enter-message">
 			<input type="text" id="content" name="content" class="form-control" placeholder="내용을 입력하세요.">
 			<input type="text" class="d-none" name="chatId" value="${chatRoom.id}">
 			<input type="text" class="d-none" name="postId" value="${post.id}">
 			<div class="input-group-append">
-				<button class="btn btn-primary" type="submit" id="contentBtn">입력</button>
+				<button class="btn btn-primary" type="submit" disabled id="contentBtn">입력</button>
 			</div>
-			</form>
 		</div>
 	</div>
+	</form>
 </div>
+
+<script>
+	$(document).ready(function() {
+		// content change이벤트
+		$('#content').on('change', function() {
+			$('#contentBtn').prop('disabled', false);
+			
+			let content = $(this).val();
+			if (!content) {
+				$('#contentBtn').prop('disabled', true); // submit 버튼 활성화
+			}
+		}); // content change 이벤트끝
+		
+	});// 레디이벤트 끝
+</script>

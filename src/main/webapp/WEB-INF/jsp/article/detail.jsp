@@ -91,30 +91,38 @@
 	<div class="mt-5 d-flex align-items-center">
 		<%-- 관심 버튼(구매자용) --%>
 		<div class="col-3 d-flex justify-content-center">
-			<a href="#" id="interestToggle">
-				<img src="/static/img/
-				<c:if test="${article.filledHeart eq false}">
-				empty
-				</c:if>
-				<c:if test="${article.filledHeart}">
-				fill
-				</c:if>
-				-heart.png" width="35" height="35">
-			</a>
+			<c:if test="${article.post.sellerId ne userId}">
+				<a href="#" id="interestToggle">
+					<img src="/static/img/
+					<c:if test="${article.filledHeart eq false}">
+					empty
+					</c:if>
+					<c:if test="${article.filledHeart}">
+					fill
+					</c:if>
+					-heart.png" width="35" height="35">
+				</a>
+			</c:if>
 		</div>
 		
 		<%-- 거래 제안하기(구매자용) or 제안 목록(판매자용) --%>
 		<div class="col-6">
 			<%-- 채팅방으로 이동(구매자전용, 비-로그인도 보임) --%>
-			<a href="/chat/chat-room-view?postId=${article.post.id}" class="btn btn-primary form-control">거래 제안하기</a>
+			<c:if test="${article.post.sellerId ne userId}">
+				<a href="/chat/chat-room-view?postId=${article.post.id}" class="btn btn-primary form-control">거래 제안하기</a>
+			</c:if>
 			
 			<%-- 채팅목록으로 이동(판매자전용) --%>
-			<a href="#" class="btn btn-primary form-control d-none">거래 제안목록</a>
+			<c:if test="${article.post.sellerId eq userId}">
+				<a href="#" class="btn btn-primary form-control">거래 제안목록</a>
+			</c:if>
 		</div>
 		
 		<%-- 수정버튼(판매자용) --%>
 		<div class="col-3">
-			<a href="#" class="btn btn-secondary form-control">수정</a>
+			<c:if test="${article.post.sellerId eq userId}">
+				<a href="#" class="btn btn-secondary form-control">수정</a>
+			</c:if>
 		</div>
 	</div>
 </div>

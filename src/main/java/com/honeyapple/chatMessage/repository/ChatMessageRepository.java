@@ -8,5 +8,5 @@ import com.honeyapple.chatMessage.entity.ChatMessageEntity;
 
 public interface ChatMessageRepository extends JpaRepository<ChatMessageEntity, Integer> {
 
-	public List<ChatMessageEntity> findByChatIdOrderByIdDesc(int chatId);
+	public List<ChatMessageEntity> findByChatIdOrderById(int chatId);
 }

@@ -19,8 +19,18 @@ public class ChatBO {
 		return chatRepository.findByPostIdAndBuyerId(postId, buyerId);
 	}
 	
+	// select(id)
+	public ChatEntity getChatEntityByChatId(int chatId) {
+		return chatRepository.findById(chatId).orElse(null);
+	}
+	
 	// insert
 	public ChatEntity addChat(int postId, int buyerId) {
-		
+		ChatEntity chat = ChatEntity.builder()
+				.postId(postId)
+				.buyerId(buyerId)
+				.tradeStatus("제안중")
+				.build();
+		return chatRepository.save(chat); // insert 성공하면 id값 들어간다.
 	}
 }

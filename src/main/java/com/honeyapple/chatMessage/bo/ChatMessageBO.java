@@ -6,16 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.honeyapple.chat.bo.ChatBO;
+import com.honeyapple.chat.entity.ChatEntity;
 import com.honeyapple.chatMessage.entity.ChatMessageEntity;
 import com.honeyapple.chatMessage.repository.ChatMessageRepository;
-import com.honeyapple.post.bo.PostBO;
-import com.honeyapple.post.domain.Post;
 
 @Service
 public class ChatMessageBO {
-	
-	@Autowired
-	private PostBO postBO;
 	
 	@Autowired
 	private ChatBO chatBO;
@@ -26,18 +22,51 @@ public class ChatMessageBO {
 	
 	// 채팅메시지List select
 	// input:chatId / output:List<ChatMessageEntity>
-	public List<ChatMessageEntity> getListChatMessageByChatIdDesc(int chatId) {
-		return chatMessageRepository.findByChatIdOrderByIdDesc(chatId);
+	public List<ChatMessageEntity> getListChatMessageByChatIdAsc(int chatId) {
+		return chatMessageRepository.findByChatIdOrderById(chatId);
 	}
 	
-	// 채팅메시지 insert
-	public void addChatMessage(Integer chatId, int postId, int userId, String content) {
+	// 채팅메시지 insert -> return chatId
+	public int addChatMessage(Integer chatId, int postId, int userId, String content) {
 		if (chatId == null) {
-			// post 정보 select
-			Post post = postBO.getPostById(postId); 
+			// 채팅방이 존재하지 않을 경우 -> 무조건 구매자가 채팅친 것.
+			// 1. 채팅방 생성
+			ChatEntity chat = chatBO.addChat(postId, userId);
 			
-			// 채팅메시지 처음으로 입력.
-			chatBO.addChat(int postId, int userId);
+			// 2. 채팅메시지 생성
+			// ChatMessage builder
+			ChatMessageEntity chatMessage = ChatMessageEntity.builder()
+					.chatId(chat.getId())
+					.buyerId(userId)
+					.content(content)
+					.build();
+			chatMessageRepository.save(chatMessage);
+			
+			// 3. chatId 리턴
+			return chat.getId();
+			
+		} else {
+			// 채팅방이 존재함.
+			// 일단 chat(채팅방) 가져온다.
+			ChatEntity chat = chatBO.getChatEntityByChatId(chatId);
+			if (userId == chat.getBuyerId()) {
+				// 로그인된 유저 == 구매자
+				chatMessageRepository.save(ChatMessageEntity.builder()
+						.chatId(chat.getId())
+						.buyerId(userId)
+						.content(content)
+						.build());
+			} else {
+				// 로그인 유저 == 판매자
+				chatMessageRepository.save(ChatMessageEntity.builder()
+						.chatId(chat.getId())
+						.sellerId(userId)
+						.content(content)
+						.build());
+			}
+			
+			// ChatId 리턴
+			return chatId;
 		}
 	}
 }
