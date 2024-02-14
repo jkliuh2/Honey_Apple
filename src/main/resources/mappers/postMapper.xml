@@ -59,4 +59,28 @@
  		`post`
  	WHERE `id` = #{postId}
  	</select>
+ 	
+ 	<select id="selectPostListByStatusOrderByIdDescLimit6" resultType="com.honeyapple.post.domain.Post">
+ 	SELECT
+ 		`id`
+		,`sellerId`
+		,`subject`
+		,`price`
+		,`negotiable`
+		,`content`
+		,`imgPath1`
+		,`imgPath2`
+		,`imgPath3`
+		,`imgPath4`
+		,`imgPath5`
+		,`status`
+		,`createdAt`
+		,`updatedAt`
+	FROM
+		`post`
+	WHERE
+		`status` = '판매중'
+	ORDER BY `id` DESC
+	LIMIT 6
+ 	</select>
  </mapper>

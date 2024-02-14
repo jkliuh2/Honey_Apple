@@ -1,5 +1,8 @@
 package com.honeyapple.article.bo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,5 +57,32 @@ public class ArticleBO {
 		
 		
 		return article;
+	}
+	
+	
+	// 메인페이지 List<Article> select
+	public List<Article> getArticleList() {
+		// 필요 정보: post, user, 관심Count
+		// post.status == "판매중" 인 것만 가져와야 한다. + id 최신 + limit 6
+		
+		List<Article> articleList = new ArrayList<>();
+		
+		List<Post> postList = postBO.getPostListByStatusOrderByIdDescLimit6("판매중");
+		for (Post post : postList) {
+			Article article = new Article();
+			
+			// post
+			article.setPost(post);
+			
+			// user(판매자)
+			article.setUser(userBO.getUserEntityById(post.getSellerId()));
+			
+			// 관심Count
+			article.setInterestCount(interestBO.getInterestCountByPostId(post.getId()));
+			
+			articleList.add(article);
+		}
+		
+		return articleList;
 	}
 }
