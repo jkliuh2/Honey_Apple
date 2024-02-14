@@ -59,24 +59,11 @@
 			<input type="submit" class="btn btn-primary col-3 form-control" value="작성완료">
 		</div>
 	</form>
-		
-	<%-- 시험용 버튼 --%>
-	<div class="my-5">>
-		<button type="button" id="testBtn">시험용 버튼</button>
-	</div>
 </div>
 
 <script>
 	$(document).ready(function() {
 		
-		// 실험용
-		$('#testBtn').on('click', function() {
-			let str = "imgFile3";
-			let num = Number(str.split("e")[1]);
-			alert(num);
-			let num2 = num + 1;
-			alert(num2);
-		});
 		
 		// 이미지파일 input change 이벤트
 		$('.img-input').on('change', function(e) {
@@ -124,7 +111,8 @@
 			}
 			
 			// 메시지 작성
-			let priceDisplay = price + ",000원";
+			let koPrice = new Intl.NumberFormat('en-US').format(price);
+			let priceDisplay = koPrice + ",000원";
 			$('#priceDisplay').text(priceDisplay);
 		});
 		
