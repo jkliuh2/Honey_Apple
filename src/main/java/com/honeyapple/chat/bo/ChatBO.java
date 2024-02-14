@@ -1,5 +1,7 @@
 package com.honeyapple.chat.bo;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,11 @@ public class ChatBO {
 	// select(id)
 	public ChatEntity getChatEntityByChatId(int chatId) {
 		return chatRepository.findById(chatId).orElse(null);
+	}
+	
+	// select(postId) - List
+	public List<ChatEntity> getChatEntityListByPostId(int postId) {
+		return chatRepository.findByPostId(postId);
 	}
 	
 	// insert

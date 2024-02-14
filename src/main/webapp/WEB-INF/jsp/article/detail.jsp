@@ -114,7 +114,7 @@
 			
 			<%-- 채팅목록으로 이동(판매자전용) --%>
 			<c:if test="${article.post.sellerId eq userId}">
-				<a href="#" class="btn btn-primary form-control">거래 제안목록</a>
+				<a href="/chat/chat-list-view?postId=${article.post.id}" class="btn btn-primary form-control">거래 제안목록</a>
 			</c:if>
 		</div>
 		

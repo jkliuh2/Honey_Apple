@@ -69,4 +69,10 @@ public class ChatMessageBO {
 			return chatId;
 		}
 	}
+	
+	
+	// select) chatId로 가장 최근 메시지
+	public ChatMessageEntity getLatestChatMessageByChatId(int chatId) {
+		return chatMessageRepository.findTop1ByChatIdOrderByIdDesc(chatId);
+	}
 }

@@ -49,7 +49,7 @@ a, a:hover {text-decoration:none;}
 	border-radius:10px;
 	margin:0 20px;
 }
-.my-message > .message {background-color:#04B431;}
-.you-message > .message {background-color:#6E6E6E;}
+.my-message > .message {background-color:#6E6E6E;}
+.you-message > .message {background-color:#04B431;}
 
 #contentBtn {width:80px;}

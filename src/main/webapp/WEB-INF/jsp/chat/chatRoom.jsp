@@ -78,7 +78,7 @@
 	<form method="post" action="/chat/enter-message">
 	<div class="mt-3 d-flex justify-content-between">
 		<div class="col-2">
-			<c:if test="${not empty chatRoom.id || userId == post.sellerId}">
+			<c:if test="${not empty chatRoom.id && userId == post.sellerId}">
 				<button type="button" class="btn btn-secondary form-control">예약</button>
 			</c:if>
 		</div>

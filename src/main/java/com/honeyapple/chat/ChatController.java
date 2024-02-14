@@ -15,6 +15,8 @@ import com.honeyapple.chat.bo.ChatBO;
 import com.honeyapple.chat.entity.ChatEntity;
 import com.honeyapple.chatMessage.bo.ChatMessageBO;
 import com.honeyapple.chatMessage.entity.ChatMessageEntity;
+import com.honeyapple.chatRoomView.bo.ChatRoomViewBO;
+import com.honeyapple.chatRoomView.domain.ChatRoomView;
 import com.honeyapple.post.bo.PostBO;
 import com.honeyapple.post.domain.Post;
 import com.honeyapple.user.bo.UserBO;
@@ -37,11 +39,20 @@ public class ChatController {
 	
 	@Autowired
 	private ChatMessageBO chatMessageBO;
+	
+	@Autowired
+	private ChatRoomViewBO chatRoomViewBO;
 
 	
-	// 채팅방으로 이동.
-	// 구매자) postId or chatId(null 가능)를 param으로 가져옴
-	// 판매자) postId and chatId를 param으로 가져옴
+	/**
+	 * 채팅방 view로 이동
+	 * 
+	 * @param postId // 필수 파라미터
+	 * @param chatId // null가능(로그인 유저가 구매자일 경우, null로 들어올 수 있음)
+	 * @param session
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/chat-room-view")
 	public String chatRoomView(
 			@RequestParam("postId") int postId,
@@ -78,11 +89,11 @@ public class ChatController {
 			// 채팅방 없으면 -> 그냥 리턴
 			
 		} else { // 채팅방 존재.
-			// 1. 로그인 유저가 채팅방의 구매자인지 확인
+			// 1. 로그인 유저가 채팅방의 구매자or판매자 확인
 			int userId = (int)session.getAttribute("userId");
 			ChatEntity chatRoom = chatBO.getChatEntityByChatId(chatId);
 			
-			if (chatRoom.getBuyerId() != userId) {
+			if (chatRoom.getBuyerId() != userId && post.getSellerId() != userId) {
 				// 유저 정보 일치X -> 해당 게시글로 리다이렉트
 				return "redirect:/article/detail-view?postId=" + postId;
 			}
@@ -107,7 +118,7 @@ public class ChatController {
 	/**
 	 * 채팅메시지 입력 API
 	 * 로그인된 유저가 판매자or구매자
-	 * 입력이 끝나면 채팅방view로 리다이렉트
+	 * 입력이 끝나면 채팅방view로 리다이렉트(postId, chatId를 param으로 전달)
 	 * 
 	 * @param chatId
 	 * @param postId
@@ -134,5 +145,34 @@ public class ChatController {
 		redirectAttributes.addAttribute("chatId", afterChatId);
 		redirectAttributes.addAttribute("postId", postId);
 		return "redirect:/chat/chat-room-view";
+	}
+	
+	
+	// /chat/chat-list-view?postId=
+	// 판매자전용) param으로 들어온 postId로 등록된 채팅방 list를 표시하는 view로 이동
+	@GetMapping("/chat-list-view")
+	public String chatListView(
+			@RequestParam("postId") int postId,
+			HttpSession session,
+			RedirectAttributes redirectAttributes,
+			Model model) {
+		
+		// 1. 로그인유저 == 판매자 인지 확인.
+		int userId = (int)session.getAttribute("userId");
+		Post post = postBO.getPostById(postId);
+		if (post.getSellerId() != userId) {
+			// 판매자 본인이 아닐 경우. -> article로 리다이렉트
+			redirectAttributes.addAttribute("postId", postId); // postId값 param으로 전달
+			return "redirect:/article/detail-view";
+		}
+		
+		// 2. postId와 일치하는 채팅방List 가져오기(List<ChatRoomView>)
+		List<ChatRoomView> chatRoomViewList = chatRoomViewBO.getChatRoomViewListByPostId(postId);
+		
+		// 3. 응답값
+		model.addAttribute("viewName", "chat/chatList");
+		model.addAttribute("titleName", "거래 채팅방 목록");
+		model.addAttribute("chatRoomViewList", chatRoomViewList);
+		return "template/layout";
 	}
 }

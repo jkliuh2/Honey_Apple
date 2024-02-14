@@ -19,9 +19,16 @@ public class ArticleController {
 	@Autowired
 	private ArticleBO articleBO;
 	
-
-	// 글 상세 페이지 view
-	// http://localhost/article/detail-view?postId=
+	
+	/**
+	 * 글 상세 페이지 view
+	 * http://localhost/article/detail-view?postId=
+	 * 
+	 * @param postId
+	 * @param session
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/detail-view")
 	public String postDetailView(
 			@RequestParam("postId") int postId,
