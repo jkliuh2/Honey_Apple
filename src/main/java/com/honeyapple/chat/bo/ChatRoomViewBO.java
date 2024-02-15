@@ -1,4 +1,4 @@
-package com.honeyapple.chatRoomView.bo;
+package com.honeyapple.chat.bo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,16 +6,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.honeyapple.chat.bo.ChatBO;
+import com.honeyapple.chat.domain.ChatRoomView;
 import com.honeyapple.chat.entity.ChatEntity;
-import com.honeyapple.chatMessage.bo.ChatMessageBO;
-import com.honeyapple.chatMessage.entity.ChatMessageEntity;
-import com.honeyapple.chatRoomView.domain.ChatRoomView;
+import com.honeyapple.chat.entity.ChatMessageEntity;
 import com.honeyapple.user.bo.UserBO;
 import com.honeyapple.user.entity.UserEntity;
 
 @Service
 public class ChatRoomViewBO {
+// CharRoomView domain에 대한 BO
 	
 	@Autowired
 	private UserBO userBO;

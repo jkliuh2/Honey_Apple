@@ -1,17 +1,17 @@
-package com.honeyapple.chatMessage.bo;
+package com.honeyapple.chat.bo;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.honeyapple.chat.bo.ChatBO;
 import com.honeyapple.chat.entity.ChatEntity;
-import com.honeyapple.chatMessage.entity.ChatMessageEntity;
-import com.honeyapple.chatMessage.repository.ChatMessageRepository;
+import com.honeyapple.chat.entity.ChatMessageEntity;
+import com.honeyapple.chat.repository.ChatMessageRepository;
 
 @Service
 public class ChatMessageBO {
+// `chat_message` 테이블에 대한 BO
 	
 	@Autowired
 	private ChatBO chatBO;

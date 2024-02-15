@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.honeyapple.chat.bo.ChatBO;
+import com.honeyapple.chat.bo.ChatMessageBO;
+import com.honeyapple.chat.bo.ChatRoomViewBO;
+import com.honeyapple.chat.domain.ChatRoomView;
 import com.honeyapple.chat.entity.ChatEntity;
-import com.honeyapple.chatMessage.bo.ChatMessageBO;
-import com.honeyapple.chatMessage.entity.ChatMessageEntity;
-import com.honeyapple.chatRoomView.bo.ChatRoomViewBO;
-import com.honeyapple.chatRoomView.domain.ChatRoomView;
+import com.honeyapple.chat.entity.ChatMessageEntity;
 import com.honeyapple.post.bo.PostBO;
 import com.honeyapple.post.domain.Post;
 import com.honeyapple.user.bo.UserBO;

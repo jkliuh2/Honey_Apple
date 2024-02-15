@@ -1,7 +1,7 @@
-package com.honeyapple.chatRoomView.domain;
+package com.honeyapple.chat.domain;
 
 import com.honeyapple.chat.entity.ChatEntity;
-import com.honeyapple.chatMessage.entity.ChatMessageEntity;
+import com.honeyapple.chat.entity.ChatMessageEntity;
 import com.honeyapple.user.entity.UserEntity;
 
 import lombok.Data;

@@ -10,6 +10,7 @@ import com.honeyapple.chat.repository.ChatRepository;
 
 @Service
 public class ChatBO {
+// `chat` 테이블에 대한 BO
 	
 	@Autowired
 	private ChatRepository chatRepository;

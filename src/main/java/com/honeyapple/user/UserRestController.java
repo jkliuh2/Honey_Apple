@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.honeyapple.common.EncryptUtils;
 import com.honeyapple.user.bo.UserBO;
+import com.honeyapple.user.bo.UserServiceBO;
 import com.honeyapple.user.entity.UserEntity;
 
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +25,9 @@ public class UserRestController {
 	
 	@Autowired
 	private UserBO userBO;
+	
+	@Autowired
+	private UserServiceBO userServiceBO;
 
 	/**
 	 * 회원가입 API
@@ -70,7 +74,7 @@ public class UserRestController {
 	
 	
 	/**
-	 * 로그인 아이디 중복확인 API
+	 * 로그인 아이디 중복확인 API  
 	 * 
 	 * @param loginId
 	 * @return
@@ -79,16 +83,14 @@ public class UserRestController {
 	public Map<String, Object> isDuplicatedLoginId(
 			@RequestParam("loginId") String loginId) {
 		
-		// DB select
-		UserEntity user = userBO.getUserEntityByLoginId(loginId);
-		
-		// 응답값
+		// BOselect + 응답값
 		Map<String, Object> result = new HashMap<>();
-		if (user != null) {
+		if (userServiceBO.isDuplicatedLoginId(loginId)) {
 			// 중복O
 			result.put("code", 200);
 			result.put("is_duplicated_loginId", true);
 		} else {
+			// 중복X
 			result.put("code", 200);
 			result.put("is_duplicated_loginId", false);
 		}
@@ -98,7 +100,7 @@ public class UserRestController {
 	
 	
 	/**
-	 * 닉네임 중복확인 API
+	 * 닉네임 중복확인 API   
 	 * 
 	 * @param nickname
 	 * @return
@@ -107,16 +109,15 @@ public class UserRestController {
 	public Map<String, Object> isDuplicatedNickname(
 			@RequestParam("nickname") String nickname) {
 		
-		// DB select
-		UserEntity user = userBO.getUserEntityByNickname(nickname);
-				
-		// 응답값
+		// BOselect + 응답값
 		Map<String, Object> result = new HashMap<>();
-		if (user != null) {
+		
+		if (userServiceBO.isDuplicatedNickname(nickname)) {
 			// 중복O
 			result.put("code", 200);
 			result.put("is_duplicated_nickname", true);
 		} else {
+			// 중복X
 			result.put("code", 200);
 			result.put("is_duplicated_nickname", false);
 		}
@@ -126,7 +127,7 @@ public class UserRestController {
 	
 	
 	/**
-	 * 로그인 API
+	 * 로그인 API                /////////////// 정리대상
 	 * 
 	 * @param loginId
 	 * @param password

@@ -1,4 +1,4 @@
-package com.honeyapple.chatMessage.entity;
+package com.honeyapple.chat.entity;
 
 import java.time.ZonedDateTime;
 

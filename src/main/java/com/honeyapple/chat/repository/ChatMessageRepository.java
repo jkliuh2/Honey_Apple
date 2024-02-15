@@ -1,10 +1,10 @@
-package com.honeyapple.chatMessage.repository;
+package com.honeyapple.chat.repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.honeyapple.chatMessage.entity.ChatMessageEntity;
+import com.honeyapple.chat.entity.ChatMessageEntity;
 
 public interface ChatMessageRepository extends JpaRepository<ChatMessageEntity, Integer> {
 
