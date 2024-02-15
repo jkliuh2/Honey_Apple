@@ -127,7 +127,7 @@ public class UserRestController {
 	
 	
 	/**
-	 * 로그인 API                /////////////// 정리대상
+	 * 로그인 API
 	 * 
 	 * @param loginId
 	 * @param password
@@ -148,9 +148,20 @@ public class UserRestController {
 		Map<String, Object> result = new HashMap<>();
 		
 		// DB select + 응답값
-		UserEntity user = userBO.getUserEntityByLoginIdPassword(loginId, hashedPassword);
-		if (user != null) {
-			// 로그인 성공
+		UserEntity user = userServiceBO.signIn(loginId, hashedPassword);
+		
+		if (user == null) {
+			// 1. 아이디부터 틀림
+			result.put("code", 500);
+			result.put("error_message", "아이디가 존재하지 않습니다..");
+			
+		} else if (user.getPassword() == null) {
+			// 2. 비밀번호만 틀림
+			result.put("code", 500);
+			result.put("error_message", "비밀번호가 일치하지 않습니다.");
+			
+		} else {
+			// 3. 로그인 성공
 			
 			// model에 담기 
 			result.put("code", 200);
@@ -160,19 +171,6 @@ public class UserRestController {
 			session.setAttribute("userId", user.getId());
 			session.setAttribute("userLoginId", user.getLoginId());
 			session.setAttribute("userNickname", user.getNickname());
-		} else {
-			// 로그인 실패
-			user = userBO.getUserEntityByLoginId(loginId); // 아이디는 맞는가?
-			
-			if (user != null) {
-				// 아이디는 존재.
-				result.put("code", 500);
-				result.put("error_message", "비밀번호가 일치하지 않습니다.");
-			} else {
-				// 아이디도 없음.
-				result.put("code", 500);
-				result.put("error_message", "아이디가 존재하지 않습니다..");
-			}
 		}
 		
 		return result;
