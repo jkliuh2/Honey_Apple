@@ -53,6 +53,7 @@
 		<ul>
 		<c:forEach items="${chatMessageList}" var="chatMessage">
 			<c:choose>
+				<%-- 로그인 유저의 메시지 --%>
 				<c:when test="${chatMessage.sellerId eq userId || chatMessage.buyerId eq userId}">
 					<li class="mt-1">
 						<div class="my-message d-flex justify-content-end">
@@ -60,6 +61,17 @@
 						</div>
 					</li>
 				</c:when>
+				
+				<%-- 예약, 예약취소, 거래완료 메시지 --%>
+				<c:when test="${empty chatMessage.sellerId && empty chatMessage.buyerId}">
+					<li class="my-3">
+						<div class="text-center">
+							<small class="font-weight-bold text-info">--- ${chatMessage.content} ---</small>
+						</div>
+					</li>
+				</c:when>
+				
+				<%-- 상대편의 메시지 --%>
 				<c:otherwise>
 					<li class="mt-1">
 						<div class="you-message d-flex justify-content-front">
@@ -77,9 +89,17 @@
 	<%-- 예약 및 입력칸 --%>
 	<form method="post" action="/chat/enter-message">
 	<div class="mt-3 d-flex justify-content-between">
+		<%-- 예약 버튼(판매자만 보임) --%>
 		<div class="col-2">
-			<c:if test="${not empty chatRoom.id && userId == post.sellerId}">
-				<button type="button" class="btn btn-secondary form-control">예약</button>
+			<c:if test="${not empty chatRoom.id && userId == post.sellerId && chatRoom.tradeStatus ne '완료'}">
+				<button type="button" class="btn btn-secondary form-control" data-toggle="modal" data-target="#reservationModal">
+					<c:if test="${chatRoom.tradeStatus eq '제안중'}">
+						예약
+					</c:if>
+					<c:if test="${chatRoom.tradeStatus eq '예약'}">
+						예약취소
+					</c:if>
+				</button>
 			</c:if>
 		</div>
 		<div class="col-7 input-group">
@@ -94,8 +114,59 @@
 	</form>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-chat-id="${chatRoom.id}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">예약/취소 확인</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <c:if test="${chatRoom.tradeStatus eq '제안중'}">
+        	거래를 예약하시겠습니까?
+        </c:if>
+        <c:if test="${chatRoom.tradeStatus eq '예약'}">
+        	거래를 취소하시겠습니까?
+        </c:if>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="reserveCheckBtn" class="btn btn-primary">확인</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 	$(document).ready(function() {
+		
+		// modal 창
+		$('#reservationModal #reserveCheckBtn').on('click', function() {
+			let chatId = $('#reservationModal').data("chat-id");
+			
+			$.ajax({
+				type:"POST"
+				, url:"/chat/trade-reservation-toggle"
+				, data:{"chatId":chatId}
+				, success:function(data) {
+					if (data.code == 200) {
+						// 예약or예약취소 성공
+						alert(data.success_message);
+						location.reload();
+					} else {
+						alert(data.error_message);
+					}
+				}
+				, error:function(request, status, error) {
+					alert("예약관리에 실패했습니다. 관리자에게 문의해주세요.");
+				}
+			}); // ajax 끝
+		}); // 모달창 확인 이벤트
+		
+		
 		// content change이벤트
 		$('#content').on('change', function() {
 			$('#contentBtn').prop('disabled', false);
