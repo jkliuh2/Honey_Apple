@@ -147,6 +147,7 @@
 		$('#reservationModal #reserveCheckBtn').on('click', function() {
 			let chatId = $('#reservationModal').data("chat-id");
 			
+			// 2. 예약 토글
 			$.ajax({
 				type:"POST"
 				, url:"/chat/trade-reservation-toggle"
@@ -156,7 +157,12 @@
 						// 예약or예약취소 성공
 						alert(data.success_message);
 						location.reload();
+					} else if (data.code = 300) {
+						// 예약시도시 - 이미 다른 채팅방에서 예약상태
+						alert(data.reservation_dupl_message);
+						location.reload();
 					} else {
+						// 그 외 db 오류
 						alert(data.error_message);
 					}
 				}
