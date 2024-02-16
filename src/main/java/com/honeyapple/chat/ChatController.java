@@ -14,13 +14,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.honeyapple.chat.bo.ChatBO;
 import com.honeyapple.chat.bo.ChatMessageBO;
 import com.honeyapple.chat.bo.ChatRoomViewBO;
+import com.honeyapple.chat.bo.ChatServiceBO;
 import com.honeyapple.chat.domain.ChatRoomView;
-import com.honeyapple.chat.entity.ChatEntity;
-import com.honeyapple.chat.entity.ChatMessageEntity;
 import com.honeyapple.post.bo.PostBO;
 import com.honeyapple.post.domain.Post;
 import com.honeyapple.user.bo.UserBO;
-import com.honeyapple.user.entity.UserEntity;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -41,6 +39,9 @@ public class ChatController {
 	private ChatMessageBO chatMessageBO;
 	
 	@Autowired
+	private ChatServiceBO chatServiceBO;
+	
+	@Autowired
 	private ChatRoomViewBO chatRoomViewBO;
 
 	
@@ -52,64 +53,35 @@ public class ChatController {
 	 * @param session
 	 * @param model
 	 * @return
+	 * post, seller, chat, chatMessage(List)
 	 */
 	@GetMapping("/chat-room-view")
 	public String chatRoomView(
-			@RequestParam("postId") int postId,
+			@RequestParam(name = "postId", required = false) Integer postId,
 			@RequestParam(name = "chatId", required = false) Integer chatId,
 			HttpSession session,
 			Model model
 			) {
 		
-		
-		// db select + model 
-		// 게시글 정보
-		Post post = postBO.getPostById(postId);
-		
-		// 판매자 정보
-		UserEntity seller = userBO.getUserEntityById(post.getSellerId());
-		
-		// chat_room 존재여부
-		if (chatId == null) {
-			// chatId == null 
-			// 일단 로그인 유저는 구매자가 확실함.
-			int buyerId = (int)session.getAttribute("userId");
-			
-			// -> 채팅방 존재하는지 확인
-			ChatEntity chatRoom = chatBO.getChatEntity(postId, buyerId);
-			if (chatRoom != null) {
-				// 채팅방 존재하면
-				// 1. model에 넣기
-				model.addAttribute("chatRoom", chatRoom);
-				
-				// 2. 채팅메시지 가져오기
-				List<ChatMessageEntity> chatMessageList = chatMessageBO.getListChatMessageByChatIdAsc(chatRoom.getId());
-				model.addAttribute("chatMessageList", chatMessageList);
-			} 
-			// 채팅방 없으면 -> 그냥 리턴
-			
-		} else { // 채팅방 존재.
-			// 1. 로그인 유저가 채팅방의 구매자or판매자 확인
-			int userId = (int)session.getAttribute("userId");
-			ChatEntity chatRoom = chatBO.getChatEntityByChatId(chatId);
-			
-			if (chatRoom.getBuyerId() != userId && post.getSellerId() != userId) {
-				// 유저 정보 일치X -> 해당 게시글로 리다이렉트
-				return "redirect:/article/detail-view?postId=" + postId;
-			}
-			
-			// 2. 채팅방, 채팅리스트 가져오기
-			List<ChatMessageEntity> chatMessageList = chatMessageBO.getListChatMessageByChatIdAsc(chatId);
-			model.addAttribute("chatRoom", chatRoom);
-			model.addAttribute("chatMessageList", chatMessageList);
+		// 잘못된 접근. 메인페이지로 리다이렉트
+		if (postId == null && chatId == null) {
+			return "redirect:/honey-apple";
 		}
 		
+		// 로그인 유저 정보 가져오기
+		int userId = (int)session.getAttribute("userId");
 		
-		// 남은 응답값
+		// db select
+		ChatRoomView chatRoomView = chatRoomViewBO.getChatRoomViewByFields(postId, chatId, userId);
+		if (chatRoomView.getPost() == null) {
+			// Post 값도 들어있지 않으면 -> 게시글 페이지로 리다이렉트
+			return "redirect:/article/detail-view?postId=" + postId;
+		}
+		
+		// 응답값
 		model.addAttribute("viewName", "chat/chatRoom");
 		model.addAttribute("titleName", "거래채팅방");
-		model.addAttribute("post", post);
-		model.addAttribute("seller", seller);
+		model.addAttribute("chatRoomView", chatRoomView);
 		
 		return "template/layout";
 	}
@@ -128,9 +100,9 @@ public class ChatController {
 	 */
 	@PostMapping("/enter-message")
 	public String enterMessage(
-			@RequestParam(name = "chatId", required = false) Integer chatId,
+			@RequestParam(name = "chatId", required = false) Integer chatId, // 채팅방이 없을 수 있음
 			@RequestParam("postId") int postId,
-			@RequestParam(name = "content", required = true) String content,
+			@RequestParam("content") String content, 
 			HttpSession session,
 			RedirectAttributes redirectAttributes
 			) {
@@ -139,7 +111,7 @@ public class ChatController {
 		int userId = (int)session.getAttribute("userId");
 		
 		// db insert
-		int afterChatId = chatMessageBO.addChatMessage(chatId, postId, userId, content);
+		int afterChatId = chatServiceBO.enterChatMessage(chatId, postId, userId, content);
 		
 		// 리다이렉트
 		redirectAttributes.addAttribute("chatId", afterChatId);

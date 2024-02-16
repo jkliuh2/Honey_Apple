@@ -14,44 +14,65 @@
 			<div>
 				<%-- 제목 --%>
 				<div class="font-weight-bold">
-					${post.subject}
+					${chatRoomView.post.subject}
 				</div>
 				<%-- 가격 --%>
 				<div>
-					<fmt:formatNumber value="${post.price}" />원
+					<fmt:formatNumber value="${chatRoomView.post.price}" />원
 				</div>
 				<%-- 주소 --%>
 				<div>
-					부산 광안리
+					부산 광안리  -- 미설정
 				</div>
 			</div>
-		</div>
+		</div> <%-- 게시글 정보 끝 --%>
 		
-		<%-- 판매자 정보 --%>
+		<%-- 상대 유저 정보 --%>
 		<div class="d-flex">
+			<%-- 판매자 정보 --%>
+			<c:if test="${chatRoomView.buyer.id eq userId}">
 			<div class="d-flex align-items-center mr-2">
 				<img src="/static/img/blank-profile.webp" width="60" height="60">
 			</div>
 			<div>
 				<div class="font-weight-bold">
-					${seller.nickname}
+					판매자 : ${chatRoomView.seller.nickname}
 				</div>
 				<div>
 					매너온도
 				</div>
 				<div>
-					${seller.temperature}°C
+					${chatRoomView.seller.temperature}°C
 				</div>
 			</div>
+			</c:if> <%-- 판매자 정보 끝 --%>
+			
+			<%-- 구매자 정보 --%>
+			<c:if test="${chatRoomView.seller.id eq userId}">
+			<div class="d-flex align-items-center mr-2">
+				<img src="/static/img/blank-profile.webp" width="60" height="60">
+			</div>
+			<div>
+				<div class="font-weight-bold">
+					구매자 : ${chatRoomView.seller.nickname}
+				</div>
+				<div>
+					매너온도
+				</div>
+				<div>
+					${chatRoomView.seller.temperature}°C
+				</div>
+			</div>
+			</c:if> <%-- 구매자정보 끝 --%>
 		</div>
-	</div>
+	</div> <%-- header 끝 --%>
 	
 	<hr>
 	
 	<%-- 채팅 메시지 --%>
 	<div id="chat-message-section">
 		<ul>
-		<c:forEach items="${chatMessageList}" var="chatMessage">
+		<c:forEach items="${chatRoomView.chatMessageList}" var="chatMessage">
 			<c:choose>
 				<%-- 로그인 유저의 메시지 --%>
 				<c:when test="${chatMessage.sellerId eq userId || chatMessage.buyerId eq userId}">
@@ -91,12 +112,12 @@
 	<div class="mt-3 d-flex justify-content-between">
 		<%-- 예약 버튼(판매자만 보임) --%>
 		<div class="col-2">
-			<c:if test="${not empty chatRoom.id && userId == post.sellerId && chatRoom.tradeStatus ne '완료'}">
+			<c:if test="${not empty chatRoomView.chat.id && userId == chatRoomView.post.sellerId && chatRoomView.chat.tradeStatus ne '완료'}">
 				<button type="button" class="btn btn-secondary form-control" data-toggle="modal" data-target="#reservationModal">
-					<c:if test="${chatRoom.tradeStatus eq '제안중'}">
+					<c:if test="${chatRoomView.chat.tradeStatus eq '제안중'}">
 						예약
 					</c:if>
-					<c:if test="${chatRoom.tradeStatus eq '예약'}">
+					<c:if test="${chatRoomView.chat.tradeStatus eq '예약'}">
 						예약취소
 					</c:if>
 				</button>
@@ -104,8 +125,8 @@
 		</div>
 		<div class="col-7 input-group">
 			<input type="text" id="content" name="content" class="form-control" placeholder="내용을 입력하세요.">
-			<input type="text" class="d-none" name="chatId" value="${chatRoom.id}">
-			<input type="text" class="d-none" name="postId" value="${post.id}">
+			<input type="text" class="d-none" name="chatId" value="${chatRoomView.chat.id}">
+			<input type="text" class="d-none" name="postId" value="${chatRoomView.post.id}">
 			<div class="input-group-append">
 				<button class="btn btn-primary" type="submit" disabled id="contentBtn">입력</button>
 			</div>
@@ -125,10 +146,10 @@
         </button>
       </div>
       <div class="modal-body">
-        <c:if test="${chatRoom.tradeStatus eq '제안중'}">
+        <c:if test="${chatRoomView.chat.tradeStatus eq '제안중'}">
         	거래를 예약하시겠습니까?
         </c:if>
-        <c:if test="${chatRoom.tradeStatus eq '예약'}">
+        <c:if test="${chatRoomView.chat.tradeStatus eq '예약'}">
         	거래를 취소하시겠습니까?
         </c:if>
       </div>

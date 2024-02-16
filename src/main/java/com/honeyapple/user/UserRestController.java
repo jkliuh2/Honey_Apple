@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.honeyapple.common.EncryptUtils;
 import com.honeyapple.user.bo.UserBO;
-import com.honeyapple.user.bo.UserServiceBO;
 import com.honeyapple.user.entity.UserEntity;
 
 import jakarta.servlet.http.HttpSession;
@@ -26,9 +25,7 @@ public class UserRestController {
 	@Autowired
 	private UserBO userBO;
 	
-	@Autowired
-	private UserServiceBO userServiceBO;
-
+	
 	/**
 	 * 회원가입 API
 	 * 
@@ -85,7 +82,7 @@ public class UserRestController {
 		
 		// BOselect + 응답값
 		Map<String, Object> result = new HashMap<>();
-		if (userServiceBO.isDuplicatedLoginId(loginId)) {
+		if (userBO.isDuplicatedLoginId(loginId)) {
 			// 중복O
 			result.put("code", 200);
 			result.put("is_duplicated_loginId", true);
@@ -112,7 +109,7 @@ public class UserRestController {
 		// BOselect + 응답값
 		Map<String, Object> result = new HashMap<>();
 		
-		if (userServiceBO.isDuplicatedNickname(nickname)) {
+		if (userBO.isDuplicatedNickname(nickname)) {
 			// 중복O
 			result.put("code", 200);
 			result.put("is_duplicated_nickname", true);
@@ -148,7 +145,7 @@ public class UserRestController {
 		Map<String, Object> result = new HashMap<>();
 		
 		// DB select + 응답값
-		UserEntity user = userServiceBO.signIn(loginId, hashedPassword);
+		UserEntity user = userBO.signIn(loginId, hashedPassword);
 		
 		if (user == null) {
 			// 1. 아이디부터 틀림

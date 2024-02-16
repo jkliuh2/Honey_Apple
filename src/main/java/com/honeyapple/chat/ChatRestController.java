@@ -16,7 +16,7 @@ public class ChatRestController {
 
 	
 	// /chat/trade-reservation-toggle
-	// 예약or예약취소 토글 API - 예약중복확인도 처리해야 함
+	// 예약or예약취소 토글 API - 예약중복확인도 처리해야 함            ////아직 덜만듬////
 	@PostMapping("/trade-reservation-toggle")
 	public Map<String, Object> tradeReservationToggle(
 			@RequestParam("chatId") int chatId,
