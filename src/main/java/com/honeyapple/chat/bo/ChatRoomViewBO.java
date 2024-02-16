@@ -67,38 +67,56 @@ public class ChatRoomViewBO {
 	// 채팅방 view 정보 가져오기 API (구매자+판매자)
 	public ChatRoomView getChatRoomViewByFields(Integer postId, Integer chatId, int userId) {
 		ChatRoomView chatRoomView = new ChatRoomView();
+		
+		ChatEntity chat = null;
+		// A. chatId == null -> postId는 무조건 존재, userId는 무조건 구매자(판매자는 이렇게 접근 불가능)
 		if (chatId == null) {
-			// 1. 채팅방이 존재하지 않는 경우.
-			Post post = postBO.getPostById(postId);
-			UserEntity seller = userBO.getUserEntityById(post.getSellerId());
+			// A-1. 채팅방이 진짜 없는지 확인하기
+			chat = chatBO.getChatEntityByPostIdBuyerId(postId, userId);
 			
-			if (userId == seller.getId()) {
-				// 채팅방이 존재하지 않을 때, 판매자는 채팅방에 접근 불가능(존재하지 않으므로)
-				return chatRoomView; // 데이터 없는 ChatRoomView 리턴
-			}
-			
-			chatRoomView.setPost(post);
-			chatRoomView.setSeller(seller);
-			return chatRoomView;
-		} else {
-			// 2. 채팅방이 존재한다.
-			ChatEntity chat = chatBO.getChatEntityByChatId(chatId);
-			Post post = postBO.getPostById(chat.getPostId());
-			UserEntity seller = userBO.getUserEntityById(post.getSellerId());
-			UserEntity buyer = userBO.getUserEntityById(chat.getBuyerId());
-			
-			if (userId != seller.getId() && userId != buyer.getId()) {
-				// 로그인 유저가 채팅방과는 전혀 상관없는 사람임.
+			if (chat == null) {
+				// A-1-1. 진짜로 채팅방이 없음.
+				// 1. 채팅방이 존재하지 않는 경우.
+				Post post = postBO.getPostById(postId);
+				UserEntity seller = userBO.getUserEntityById(post.getSellerId());
+				
+				if (userId == seller.getId()) {
+					// 채팅방이 존재하지 않을 때, 판매자는 채팅방에 접근 불가능(존재하지 않으므로)
+					return chatRoomView; // 데이터 없는 ChatRoomView 리턴
+				}
+				
+				chatRoomView.setPost(post);
+				chatRoomView.setSeller(seller);
 				return chatRoomView;
 			}
-			List<ChatMessageEntity> chatMessageList = chatMessageBO.getListChatMessageByChatIdAsc(chatId);
-			chatRoomView.setPost(post);
-			chatRoomView.setSeller(seller);
-			chatRoomView.setBuyer(buyer);
-			chatRoomView.setChat(chat);
-			chatRoomView.setChatMessageList(chatMessageList);
+			// A-1-2. 채팅방이 존재한다? 그냥 아래로 진행.
+			
+		} else {
+			// A-2. chatId값이 존재함.
+			chat = chatBO.getChatEntityByChatId(chatId);
+		}
+		
+		// 여기까지 왔다면, chat에 채팅방 정보가 들어가있음.
+		
+		// B. 채팅방이 존재하기 때문에, 채팅방과 관련된 정보들을 DB에서 select한다.
+		Post post = postBO.getPostById(chat.getPostId());
+		UserEntity seller = userBO.getUserEntityById(post.getSellerId());
+		UserEntity buyer = userBO.getUserEntityById(chat.getBuyerId());
+		
+		if (userId != seller.getId() && userId != buyer.getId()) {
+			// 로그인 유저가 채팅방과 전혀 상관없는 사람일 경우.
 			return chatRoomView;
 		}
+		List<ChatMessageEntity> chatMessageList = chatMessageBO.getListChatMessageByChatIdAsc(chatId);
+		
+		// C. select한 정보들을 ChatRoomView 객체에 담아서 return
+		chatRoomView.setPost(post);
+		chatRoomView.setSeller(seller);
+		chatRoomView.setBuyer(buyer);
+		chatRoomView.setChat(chat);
+		chatRoomView.setChatMessageList(chatMessageList);
+		return chatRoomView;
+		
 		// 리턴 종류
 		// 1. 비어있는 ChatRoomView -> 컨트롤러에서 내부의 상태 확인하고 postId로 post로 리다이렉트
 		// 2. 뭔가 차있는 ChatRoomView -> 모델에 집어넣고 채팅방 jsp 리턴 (최소한 post, seller는 차있다)

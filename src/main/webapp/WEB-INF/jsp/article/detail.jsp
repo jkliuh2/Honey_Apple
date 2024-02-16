@@ -109,7 +109,7 @@
 		<div class="col-6">
 			<%-- 채팅방으로 이동(구매자전용, 비-로그인도 보임) --%>
 			<c:if test="${article.post.sellerId ne userId}">
-				<a href="/chat/chat-room-view?postId=${article.post.id}" class="btn btn-primary form-control">거래 제안하기</a>
+				<a href="/chat/chat-room-view?postId=${article.post.id}&chatId=" class="btn btn-primary form-control">거래 제안하기</a>
 			</c:if>
 			
 			<%-- 채팅목록으로 이동(판매자전용) --%>

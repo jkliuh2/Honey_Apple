@@ -19,34 +19,44 @@ public class ChatServiceBO {
 	// 채팅메시지 입력 API
 	// input:chatId(null가능), postId, userId(로그인), content / output:int(chatId)
 	public int enterChatMessage(Integer chatId, int postId, int userId, String content) {
-		// A. 채팅방이 없을 경우
-		if (chatId == null) {
-			// userId는 무조건 buyer
-			// 1. 채팅방 생성
-			ChatEntity chat = chatBO.addChat(postId, userId);
+		// 일단, postId/chatId가 모두 없는 경우는 컨트롤러에서 막음.
+		
+		ChatEntity chat = null; // 채팅메시지가 쓰여진 채팅방(null로 초기화)
+		
+		// A. 채팅방 select
+		if (chatId == null) { // A-1. chatId가 null로 들어옴.
+			// 무조건 userId == buyerId, postId는 무조건 존재함.
+			// postId로 chat 가져오기.
+			chat = chatBO.getChatEntityByPostIdBuyerId(postId, userId);
 			
-			// 2. 채팅메시지 insert
-			int newChatId = chat.getId();
-			chatMessageBO.enterBuyerChatMessage(newChatId, userId, content);
-			
-			// 3. chatId 리턴
-			return newChatId;
+			if (chat == null) { // A-1-1. ★ 채팅방이 진짜 없는 경우.
+				// 1. 채팅방 생성
+				chat = chatBO.addChat(postId, userId);
+				
+				// 2. 채팅메시지 insert
+				chatMessageBO.enterBuyerChatMessage(chat.getId(), userId, content);
+				
+				// 3. chatId 리턴 - ★ 메소드 끝
+				return chat.getId();
+			}
+		} else {
+			// A-2. chatId가 존재 -> chatId로 chat 가져오기(무조건 채팅방은 존재하는 상태)
+			chat = chatBO.getChatEntityByChatId(chatId);
+			// userId는 구매자/판매자 모름.
 		}
 		
-		// B. 채팅방이 존재할 경우
-		// 1. 채팅방 select
-		ChatEntity chat = chatBO.getChatEntityByChatId(chatId);
+		///// 여기까지 왔다면, chat에는 채팅방정보가 저장되어있다.
 		
-		// 2. 유저의 판매자/구매자 로 나누어서 채팅메시지 insert
+		// B. 유저의 판매자/구매자 로 나누어서 채팅메시지 insert
 		if (chat.getBuyerId() == userId) {
 			// 로그인유저 == 구매자
-			chatMessageBO.enterBuyerChatMessage(chatId, userId, content);
+			chatMessageBO.enterBuyerChatMessage(chat.getId(), userId, content);
 		} else {
 			// 로그인유저 == 판매자
-			chatMessageBO.enterSellerChatMessage(chatId, userId, content);
+			chatMessageBO.enterSellerChatMessage(chat.getId(), userId, content);
 		}
 		
-		// 3. chatId 리턴
-		return chatId;
+		// C. chatId 리턴
+		return chat.getId();
 	}
 }

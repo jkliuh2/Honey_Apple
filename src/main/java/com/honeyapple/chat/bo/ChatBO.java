@@ -18,7 +18,7 @@ public class ChatBO {
 	
 	// select
 	// input:postId, buyerId / output:ChatEntity
-	public ChatEntity getChatEntity(int postId, int buyerId) {
+	public ChatEntity getChatEntityByPostIdBuyerId(int postId, int buyerId) {
 		return chatRepository.findByPostIdAndBuyerId(postId, buyerId);
 	}
 	
