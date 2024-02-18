@@ -136,7 +136,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-chat-id="${chatRoom.id}">
+<div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-chat-id="${chatRoomView.chat.id}">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -164,11 +164,18 @@
 <script>
 	$(document).ready(function() {
 		
-		// modal 창
+		// modal 창 -> 예약/예약취소 하기
 		$('#reservationModal #reserveCheckBtn').on('click', function() {
-			let chatId = $('#reservationModal').data("chat-id");
 			
-			// 2. 예약 토글
+			
+			// 1. 예약/예약취소는 판매자 본인만 가능
+			if (${chatRoomView.post.sellerId != userId}) {
+				alert("예약 및 예약취소는 판매자 본인만 가능합니다.");
+				location.reload();
+			}
+			
+			// 2. ajax - 예약 토글
+			let chatId = $('#reservationModal').data("chat-id");
 			$.ajax({
 				type:"POST"
 				, url:"/chat/trade-reservation-toggle"
@@ -178,12 +185,16 @@
 						// 예약or예약취소 성공
 						alert(data.success_message);
 						location.reload();
-					} else if (data.code = 300) {
-						// 예약시도시 - 이미 다른 채팅방에서 예약상태
-						alert(data.reservation_dupl_message);
-						location.reload();
+					} else if (data.code == 300) {
+						// 예약시도) 이미 다른 채팅방에서 예약상태 -> 채팅리스트로 보내기
+						alert(data.error_message);
+						location.href="/chat/chat-list-view?postId=" + chatRoomView.post.id;
+					} else if (data.code == 301) {
+						// 판매완료 -> 글 상세 페이지로 보내기
+						alert(data.error_message);
+						location.href="/article/detail-view?postId=" + chatRoomView.post.id;
 					} else {
-						// 그 외 db 오류
+						// 그 외 오류
 						alert(data.error_message);
 					}
 				}

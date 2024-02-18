@@ -18,7 +18,7 @@ import lombok.ToString;
 
 @ToString
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor  
 @AllArgsConstructor
 @Table(name = "chat")

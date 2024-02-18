@@ -41,4 +41,12 @@ public class ChatBO {
 				.build();
 		return chatRepository.save(chat); // insert 성공하면 id값 들어간다.
 	}
+	
+	// update (tradeStatus 변경)
+	public void updateChatByIdTradeStatus(int chatId, String tradeStatus) {
+		ChatEntity chat = getChatEntityByChatId(chatId);
+		chatRepository.save(chat.toBuilder()
+				.tradeStatus(tradeStatus)
+				.build());
+	}
 }

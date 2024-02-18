@@ -3,6 +3,7 @@ package com.honeyapple.post.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.honeyapple.post.domain.Post;
 
@@ -17,4 +18,10 @@ public interface PostMapper {
 	
 	// select(판매중+최신+6개)
 	public List<Post> selectPostListByStatusOrderByIdDescLimit6(String status);
+	
+	// update(거래상태 update)
+	public void updatePostByIdStatus(
+			@Param("postId") int postId,
+			@Param("status") String status);
+	
 }

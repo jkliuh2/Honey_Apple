@@ -83,4 +83,12 @@
 	ORDER BY `id` DESC
 	LIMIT 6
  	</select>
+ 	
+ 	<!-- 거래상태 update -->
+ 	<update id="updatePostByIdStatus" parameterType="map">
+ 	UPDATE `post`
+ 	SET `status` = #{status}
+ 		, `updatedAt` = NOW()
+ 	WHERE `id` = #{postId}
+ 	</update>
  </mapper>

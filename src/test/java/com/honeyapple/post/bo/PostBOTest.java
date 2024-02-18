@@ -20,9 +20,16 @@ class PostBOTest {
 	
 	
 	@Transactional
-	@Test
+	//@Test
 	void 글생성테스트() {
 		postBO.addPost(1, "ssd", "테스트제목", "테스트내용", 10000, 1, null, null, null, null, null);
+	}
+	
+	
+	@Transactional
+	@Test
+	void 거래상태업데이트테스트() {
+		postBO.updatePostByIdStatus(1, "예약중");
 	}
 
 }

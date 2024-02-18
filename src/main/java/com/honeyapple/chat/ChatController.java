@@ -11,14 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.honeyapple.chat.bo.ChatBO;
-import com.honeyapple.chat.bo.ChatMessageBO;
 import com.honeyapple.chat.bo.ChatRoomViewBO;
 import com.honeyapple.chat.bo.ChatServiceBO;
 import com.honeyapple.chat.domain.ChatRoomView;
 import com.honeyapple.post.bo.PostBO;
 import com.honeyapple.post.domain.Post;
-import com.honeyapple.user.bo.UserBO;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -30,15 +27,6 @@ public class ChatController {
 	private PostBO postBO;
 	
 	@Autowired
-	private UserBO userBO;
-	
-	@Autowired
-	private ChatBO chatBO;
-	
-	@Autowired
-	private ChatMessageBO chatMessageBO;
-	
-	@Autowired
 	private ChatServiceBO chatServiceBO;
 	
 	@Autowired
@@ -48,12 +36,11 @@ public class ChatController {
 	/**
 	 * 채팅방 view로 이동
 	 * 
-	 * @param postId // 필수 파라미터
+	 * @param postId // null가능(로그인 유저가 판매자일 경우)
 	 * @param chatId // null가능(로그인 유저가 구매자일 경우, null로 들어올 수 있음)
 	 * @param session
 	 * @param model
 	 * @return
-	 * post, seller, chat, chatMessage(List)
 	 */
 	@GetMapping("/chat-room-view")
 	public String chatRoomView(
@@ -120,8 +107,15 @@ public class ChatController {
 	}
 	
 	
-	// /chat/chat-list-view?postId=
-	// 판매자전용) param으로 들어온 postId로 등록된 채팅방 list를 표시하는 view로 이동
+	/**
+	 * 판매자전용) param으로 들어온 postId로 등록된 채팅방 list를 표시하는 view로 이동
+	 * 
+	 * @param postId
+	 * @param session
+	 * @param redirectAttributes
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/chat-list-view")
 	public String chatListView(
 			@RequestParam("postId") int postId,

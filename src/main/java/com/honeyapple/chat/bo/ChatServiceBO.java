@@ -4,16 +4,52 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.honeyapple.chat.entity.ChatEntity;
+import com.honeyapple.post.bo.PostBO;
+import com.honeyapple.post.domain.Post;
 
 @Service
 public class ChatServiceBO {
 // /chat 관련 API에 대한 BO
+	
+	@Autowired
+	private PostBO postBO;
 
 	@Autowired
 	private ChatBO chatBO;
 	
 	@Autowired
 	private ChatMessageBO chatMessageBO;
+	
+	
+	
+	// 거래 예약/예약취소 토글 API
+	// input: chatId, userId(세션) / output:String(결과에 따라 결과값을 String으로 리턴)
+	public String reservationToggle(int chatId) {
+		// chatId의 post의 거래상태를 확인한다.
+		ChatEntity chat = chatBO.getChatEntityByChatId(chatId);
+		Post post = postBO.getPostById(chat.getPostId());
+		
+		if (post.getStatus().equals("판매중")) {
+			// 1. 아직 예약X 상황 -> 예약한다.
+			chatBO.updateChatByIdTradeStatus(chatId, "예약"); // chat예약
+			postBO.updatePostByIdStatus(post.getId(), "예약중"); // post예약
+			return "예약완료";
+		} else if (post.getStatus().equals("판매완료")){
+			// 2. 아예 거래가 끝난 상황 -> 아무것도 안하고 리턴
+			return "판매완료";
+		} else if (post.getStatus().equals("예약중") && chat.getTradeStatus().equals("예약")) {
+			// 3. "이 채팅방에서" 예약한 상황 -> 예약취소한다.
+			chatBO.updateChatByIdTradeStatus(chatId, "제안중"); // chat예약취소
+			postBO.updatePostByIdStatus(post.getId(), "판매중"); // post예약취소
+			return "예약취소완료";
+		} else if (post.getStatus().equals("예약중") && chat.getTradeStatus().equals("제안중")) {
+			//4. "다른 채팅방에서" 예약한 상황 -> 아무것도 안하고 리턴
+			return "다른사람예약";
+		} else {
+			// 5. 그 외. (뭔가 잘못됨)
+			return "뭔가 잘못됨";
+		}
+	}
 	
 	
 	// 채팅메시지 입력 API
@@ -59,4 +95,5 @@ public class ChatServiceBO {
 		// C. chatId 리턴
 		return chat.getId();
 	}
+	
 }

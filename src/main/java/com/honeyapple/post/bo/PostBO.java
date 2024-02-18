@@ -73,9 +73,13 @@ public class PostBO {
 	public Post getPostById(int postId) {
 		return postMapper.selectPostById(postId);
 	}
-	
 	// select) 판매중+최신+숫자제한
 	public List<Post> getPostListByStatusOrderByIdDescLimit6(String status) {
 		return postMapper.selectPostListByStatusOrderByIdDescLimit6(status);
+	}
+	
+	// Update - id, status(거래상태)
+	public void updatePostByIdStatus(int postId, String status) {
+		postMapper.updatePostByIdStatus(postId, status);
 	}
 }
