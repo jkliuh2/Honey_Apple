@@ -107,7 +107,7 @@ public class ChatRoomViewBO {
 			// 로그인 유저가 채팅방과 전혀 상관없는 사람일 경우.
 			return chatRoomView;
 		}
-		List<ChatMessageEntity> chatMessageList = chatMessageBO.getListChatMessageByChatIdAsc(chatId);
+		List<ChatMessageEntity> chatMessageList = chatMessageBO.getListChatMessageByChatIdAsc(chat.getId());
 		
 		// C. select한 정보들을 ChatRoomView 객체에 담아서 return
 		chatRoomView.setPost(post);
