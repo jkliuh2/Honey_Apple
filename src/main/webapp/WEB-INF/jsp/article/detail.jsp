@@ -48,8 +48,11 @@
 	<hr>
 	
 	<%-- 여기부터 post 내용들 --%>
-	<%-- 글 제목 --%>
-	<h3>${article.post.subject}</h3>
+	<%-- 글 제목 + 거래상태 --%>
+	<div class="d-flex justify-content-between align-items-center">
+		<h3>${article.post.subject}</h3>
+		<span class="text-info font-weight-bold">${article.post.status}</span>
+	</div>
 	
 	<%-- 가격, 네고여부 --%>
 	<div class="font-22px font-weight-bold">

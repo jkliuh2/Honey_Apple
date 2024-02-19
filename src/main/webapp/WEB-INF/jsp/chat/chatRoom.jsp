@@ -54,13 +54,13 @@
 			</div>
 			<div>
 				<div class="font-weight-bold">
-					구매자 : ${chatRoomView.seller.nickname}
+					구매자 : ${chatRoomView.buyer.nickname}
 				</div>
 				<div>
 					매너온도
 				</div>
 				<div>
-					${chatRoomView.seller.temperature}°C
+					${chatRoomView.buyer.temperature}°C
 				</div>
 			</div>
 			</c:if> <%-- 구매자정보 끝 --%>
@@ -108,7 +108,7 @@
 	<hr>
 	
 	<%-- 예약 및 입력칸 --%>
-	<form method="post" action="/chat/enter-message">
+	
 	<div class="mt-3 d-flex justify-content-between">
 		<%-- 예약 버튼(판매자만 보임) --%>
 		<div class="col-2">
@@ -123,16 +123,31 @@
 				</button>
 			</c:if>
 		</div>
-		<div class="col-7 input-group">
-			<input type="text" id="content" name="content" class="form-control" placeholder="내용을 입력하세요.">
-			<input type="text" class="d-none" name="chatId" value="${chatRoomView.chat.id}">
-			<input type="text" class="d-none" name="postId" value="${chatRoomView.post.id}">
-			<div class="input-group-append">
-				<button class="btn btn-primary" type="submit" disabled id="contentBtn">입력</button>
-			</div>
+		
+		<%-- 거래완료버튼(예약상태+구매자만 보임) --%>
+		<div class="col-2">
+			<c:if test="${chatRoomView.chat.tradeStatus eq '예약' && chatRoomView.chat.buyerId eq userId}">
+			<form method="post" id="tradeCompleteForm" action="/review/complete-trade-view">
+				<input type="number" name="chatId" class="d-none" value="${chatRoomView.chat.id}">
+				<button type="submit" id="completeBtn" class="btn btn-warning form-control">거래완료</button>
+			</form>
+			</c:if>
+		</div>
+		
+		<%-- 채팅메시지 입력 --%>
+		<div class="col-7">
+			<form method="post" action="/chat/enter-message">
+				<div class="input-group">
+					<input type="text" id="content" name="content" class="form-control" placeholder="내용을 입력하세요.">
+					<input type="text" class="d-none" name="chatId" value="${chatRoomView.chat.id}">
+					<input type="text" class="d-none" name="postId" value="${chatRoomView.post.id}">
+					<div class="input-group-append">
+						<button class="btn btn-primary" type="submit" disabled id="contentBtn">입력</button>
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
-	</form>
 </div>
 
 <!-- Modal -->
@@ -167,7 +182,6 @@
 		// modal 창 -> 예약/예약취소 하기
 		$('#reservationModal #reserveCheckBtn').on('click', function() {
 			
-			
 			// 1. 예약/예약취소는 판매자 본인만 가능
 			if (${chatRoomView.post.sellerId != userId}) {
 				alert("예약 및 예약취소는 판매자 본인만 가능합니다.");
@@ -175,7 +189,7 @@
 			}
 			
 			// 2. ajax - 예약 토글
-			let chatId = $('#reservationModal').data("chat-id");
+			let chatId = ${chatRoomView.chat.id};
 			$.ajax({
 				type:"POST"
 				, url:"/chat/trade-reservation-toggle"

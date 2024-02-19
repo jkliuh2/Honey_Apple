@@ -21,15 +21,17 @@ public class ChatBO {
 	public ChatEntity getChatEntityByPostIdBuyerId(int postId, int buyerId) {
 		return chatRepository.findByPostIdAndBuyerId(postId, buyerId);
 	}
-	
 	// select(id)
 	public ChatEntity getChatEntityByChatId(int chatId) {
 		return chatRepository.findById(chatId).orElse(null);
 	}
-	
 	// select(postId) - List
 	public List<ChatEntity> getChatEntityListByPostId(int postId) {
 		return chatRepository.findByPostId(postId);
+	}
+	// select(chatId, buyerId)
+	public ChatEntity getChatEntityByChatIdBuyerId(int chatId, int buyerId) {
+		return chatRepository.findByIdAndBuyerId(chatId, buyerId);
 	}
 	
 	// insert

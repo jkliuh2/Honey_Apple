@@ -41,7 +41,15 @@ public class ChatMessageBO {
 	public void enterSellerChatMessage(int chatId, int sellerId, String content) {
 		chatMessageRepository.save(ChatMessageEntity.builder()
 				.chatId(chatId)
-				.buyerId(sellerId)
+				.sellerId(sellerId)
+				.content(content)
+				.build());
+	}
+	// insert) 거래상태 메시지 입력(예약, 예약취소, 거래완료 등)
+	// input: chatId, content(예약완료, 예약취소, 거래완료) / output:X
+	public void enterStatusMessage(int chatId, String content) {
+		chatMessageRepository.save(ChatMessageEntity.builder()
+				.chatId(chatId)
 				.content(content)
 				.build());
 	}

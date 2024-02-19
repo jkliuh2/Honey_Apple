@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.honeyapple.aop.TimeTrace;
 import com.honeyapple.common.EncryptUtils;
 import com.honeyapple.user.bo.UserBO;
 import com.honeyapple.user.entity.UserEntity;
@@ -134,6 +135,7 @@ public class UserRestController {
 	 * @throws UnsupportedEncodingException
 	 */
 	@PostMapping("/sign-in")
+	@TimeTrace
 	public Map<String, Object> signIn(
 			@RequestParam("loginId") String loginId,
 			@RequestParam("password") String password,

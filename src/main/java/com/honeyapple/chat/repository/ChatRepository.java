@@ -9,6 +9,7 @@ import com.honeyapple.chat.entity.ChatEntity;
 public interface ChatRepository extends JpaRepository<ChatEntity, Integer> {
 
 	public ChatEntity findByPostIdAndBuyerId(int postId, int buyerId);
+	public ChatEntity findByIdAndBuyerId(int id, int buyerId);
 	
 	public List<ChatEntity> findByPostId(int postId);
 }

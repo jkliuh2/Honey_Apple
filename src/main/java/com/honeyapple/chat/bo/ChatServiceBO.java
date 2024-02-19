@@ -32,6 +32,7 @@ public class ChatServiceBO {
 		if (post.getStatus().equals("판매중")) {
 			// 1. 아직 예약X 상황 -> 예약한다.
 			chatBO.updateChatByIdTradeStatus(chatId, "예약"); // chat예약
+			chatMessageBO.enterStatusMessage(chatId, "예약완료"); // 예약됬다는 메시지 
 			postBO.updatePostByIdStatus(post.getId(), "예약중"); // post예약
 			return "예약완료";
 		} else if (post.getStatus().equals("판매완료")){
@@ -40,6 +41,7 @@ public class ChatServiceBO {
 		} else if (post.getStatus().equals("예약중") && chat.getTradeStatus().equals("예약")) {
 			// 3. "이 채팅방에서" 예약한 상황 -> 예약취소한다.
 			chatBO.updateChatByIdTradeStatus(chatId, "제안중"); // chat예약취소
+			chatMessageBO.enterStatusMessage(chatId, "예약취소"); // 예약취소 됬다는 메시지
 			postBO.updatePostByIdStatus(post.getId(), "판매중"); // post예약취소
 			return "예약취소완료";
 		} else if (post.getStatus().equals("예약중") && chat.getTradeStatus().equals("제안중")) {
