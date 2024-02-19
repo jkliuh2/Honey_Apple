@@ -202,11 +202,11 @@
 					} else if (data.code == 300) {
 						// 예약시도) 이미 다른 채팅방에서 예약상태 -> 채팅리스트로 보내기
 						alert(data.error_message);
-						location.href="/chat/chat-list-view?postId=" + chatRoomView.post.id;
+						location.href="/chat/chat-list-view?postId=" + ${chatRoomView.post.id};
 					} else if (data.code == 301) {
 						// 판매완료 -> 글 상세 페이지로 보내기
 						alert(data.error_message);
-						location.href="/article/detail-view?postId=" + chatRoomView.post.id;
+						location.href="/article/detail-view?postId=" + ${chatRoomView.post.id};
 					} else {
 						// 그 외 오류
 						alert(data.error_message);

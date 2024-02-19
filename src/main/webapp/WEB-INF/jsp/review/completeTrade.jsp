@@ -59,6 +59,9 @@
 		<div class="mt-5 font-weight-bold">2. 판매자에게 남기고 싶은 말이 있으신가요?</div>
 		<textarea name="review" class="mt-3 form-control" rows="4"></textarea>
 		
+		<%-- chatId 전달용 숨은 input --%>
+		<input class="d-none" name="chatId" value="${chatRoomView.chat.id}">
+		
 		<%-- submit 버튼 --%>
 		<div class="mt-5 d-flex justify-content-between align-items-center">
 			<div>
@@ -98,6 +101,10 @@
 					// 성공
 					alert("성공적인 거래를 축하합니다. 메인페이지로 돌아갑니다.");
 					location.href="/honey-apple";
+				} else if (data.code == 501) {	
+					// 로그인유저 != 구매자
+					alert(data.error_message);
+					location.href="/article/detail-view?postId=" + ${chatRoomView.post.id};
 				} else {
 					// 실패
 					alert(data.error_message);
