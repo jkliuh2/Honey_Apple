@@ -19,6 +19,12 @@ public interface PostMapper {
 	// select(판매중+최신+6개)
 	public List<Post> selectPostListByStatusOrderByIdDescLimit6(String status);
 	
+	// select(sellerId+status(or exceptStatus)+id내림차순)
+	public List<Post> selectPostListBySellerIdStatusOrderByIdDesc(
+			@Param("sellerId") int sellerId,
+			@Param("status") String status,
+			@Param("exceptStatus") String exceptStatus);
+	
 	// update(거래상태 update)
 	public void updatePostByIdStatus(
 			@Param("postId") int postId,

@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD}) // 어노테이션 적용 위치
 @Retention(RetentionPolicy.RUNTIME) // 어노테이션 영향미치는 시기
 public @interface TimeTrace {
-
+// @TimeTrace 어노테이션 정의를 위한 클래스
 }

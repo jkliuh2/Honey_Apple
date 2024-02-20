@@ -12,6 +12,9 @@ footer {height: 100px;}
 /* a, a:hover 데코 설정 */
 a, a:hover {text-decoration:none;}
 
+/* 옅은 회색 글씨 색 */
+.gray-text {color:#868e96;}
+
 /* header 부분 css */
 #honey {color:#FAC62B;}
 #apple {color:#f15a22;}
@@ -53,3 +56,4 @@ a, a:hover {text-decoration:none;}
 .you-message > .message {background-color:#04B431;}
 
 #contentBtn {width:80px;}
+

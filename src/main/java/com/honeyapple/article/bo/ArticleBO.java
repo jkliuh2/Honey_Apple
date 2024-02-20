@@ -85,4 +85,24 @@ public class ArticleBO {
 		
 		return articleList;
 	}
+	
+	
+	// sellerId + Status로 게시글 전부 가져오기
+	public List<Article> getArticleListBySellerIdStatus(int sellerId, String status, String exceptStatus) {
+		// 필요정보:post, seller, 관심count
+		UserEntity seller = userBO.getUserEntityById(sellerId);
+		
+		List<Article> articleList = new ArrayList<>();
+		
+		// article 가져오기(status, exceptStatus 둘 중 하나는 null)
+		List<Post> postList = postBO.getPostListBySellerIdStatusOrderByIdDesc(sellerId, status, exceptStatus);
+		for (Post post : postList) {
+			Article article = new Article();
+			article.setPost(post);
+			article.setUser(seller);
+			article.setInterestCount(interestBO.getInterestCountByPostId(post.getId()));
+			articleList.add(article);
+		}
+		return articleList;
+	}
 }

@@ -17,4 +17,6 @@ public class ReviewBO {
 			int score, String review) {
 		reviewMapper.insertReview(postId, buyerId, sellerId, score, review);
 	}
+	
+	// select) sellerId의 모든 리뷰 
 }

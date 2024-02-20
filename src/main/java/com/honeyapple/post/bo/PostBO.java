@@ -77,6 +77,10 @@ public class PostBO {
 	public List<Post> getPostListByStatusOrderByIdDescLimit6(String status) {
 		return postMapper.selectPostListByStatusOrderByIdDescLimit6(status);
 	}
+	// select) sellerId + status + id내림차순 -> List
+	public List<Post> getPostListBySellerIdStatusOrderByIdDesc(int sellerId, String status, String exceptStatus) {
+		return postMapper.selectPostListBySellerIdStatusOrderByIdDesc(sellerId, status, exceptStatus);
+	}
 	
 	// Update - id, status(거래상태)
 	public void updatePostByIdStatus(int postId, String status) {

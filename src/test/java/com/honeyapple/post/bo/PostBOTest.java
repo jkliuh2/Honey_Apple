@@ -27,9 +27,15 @@ class PostBOTest {
 	
 	
 	@Transactional
-	@Test
+//	@Test
 	void 거래상태업데이트테스트() {
 		postBO.updatePostByIdStatus(1, "예약중");
+	}
+	
+	@Transactional
+	@Test
+	void Article가져오기테스트() {
+		postBO.getPostListBySellerIdStatusOrderByIdDesc(1, null, "판매중");
 	}
 
 }

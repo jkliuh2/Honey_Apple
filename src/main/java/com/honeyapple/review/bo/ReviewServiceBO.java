@@ -1,5 +1,8 @@
 package com.honeyapple.review.bo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +11,7 @@ import com.honeyapple.chat.bo.ChatMessageBO;
 import com.honeyapple.chat.entity.ChatEntity;
 import com.honeyapple.post.bo.PostBO;
 import com.honeyapple.post.domain.Post;
+import com.honeyapple.review.domain.ReviewCard;
 
 @Service
 public class ReviewServiceBO {
@@ -52,5 +56,11 @@ public class ReviewServiceBO {
 		
 		// 리턴
 		return 1;
+	}
+	
+	// select) sellerId의 유저의 모든 리뷰들
+	public List<ReviewCard> getReviewCardList(int sellerId) {
+		List<ReviewCard> reviewCardList = new ArrayList<ReviewCard>();
+		
 	}
 }
