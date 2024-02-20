@@ -8,8 +8,8 @@ import lombok.ToString;
 @ToString
 @Data
 public class ReviewCard {
-// review + userId(리뷰 쓴 사람)
+// review + buyer(리뷰 쓴 사람)
 	private Review review;
 	
-	private UserEntity user;
+	private UserEntity buyer;
 }

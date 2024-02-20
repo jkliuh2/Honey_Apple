@@ -65,9 +65,12 @@ public class ProfileController {
 		
 		if (menu.equals("reviewList")) {
 			// reviewList 가져와서 담기
-			List<ReviewCard> reviewCardList = reviewServiceBO.getReviewCardList(userId);
+			List<ReviewCard> reviewCardList = reviewServiceBO.getReviewCardListBySellerId(userId);
+			model.addAttribute("reviewCardList", reviewCardList);
 		} else if (menu.equals("soldList")) {
 			// 판매완료List 가져와서 담기
+			List<Article> articleList = articleBO.getArticleListBySellerIdStatus(userId, "판매완료", null);
+			model.addAttribute("articleList", articleList);
 		}
 		return "profile/" + menu;
 	}

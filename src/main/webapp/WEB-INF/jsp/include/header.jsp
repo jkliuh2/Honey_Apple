@@ -23,11 +23,9 @@
 	<c:if test="${not empty userNickname}">
 		<div class="col-4 d-flex justify-content-between">
 			<%-- 유저 정보 --%>
-			<a href="#">
-				<label class="h-100 d-flex align-items-center">
-					<img src="/static/img/blank-profile.webp" alt="프로필 이미지" width="60" height="60">
-					<span class="text-dark">${userNickname}</span>
-				</label>
+			<a href="/profile?userId=${userId}" class="h-100 d-flex align-items-center">
+				<img src="/static/img/blank-profile.webp" alt="프로필 이미지" width="60" height="60">
+				<span class="text-dark ml-2">${userNickname}</span>
 			</a>
 			
 			<%-- 내 꿀템들 + 로그아웃 --%>

@@ -22,4 +22,21 @@
  		, NOW()
  	)
  	</insert>
+ 	
+ 	<!-- sellerId로 List select(review 내용 있는 것) -->
+ 	<select id="selectReviewListBySellerIdHasReviewDesc" resultType="com.honeyapple.review.domain.Review">
+ 	SELECT
+	 	`postId`
+		,`buyerId`
+		,`sellerId`
+		,`score`
+		,`review`
+		,`createdAt`
+	FROM
+		`review`
+	WHERE
+		`sellerId` = #{sellerId}
+		AND `review` IS NOT NULL
+	ORDER BY `createdAt` DESC
+ 	</select>
  </mapper>

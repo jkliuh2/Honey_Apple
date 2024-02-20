@@ -1,8 +1,11 @@
 package com.honeyapple.review.bo;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.honeyapple.review.domain.Review;
 import com.honeyapple.review.mapper.ReviewMapper;
 
 @Service
@@ -18,5 +21,8 @@ public class ReviewBO {
 		reviewMapper.insertReview(postId, buyerId, sellerId, score, review);
 	}
 	
-	// select) sellerId의 모든 리뷰 
+	// select) sellerId의 모든 리뷰(최신순)
+	public List<Review> getReviewListBySellerIdHasReviewDesc(int sellerId) {
+		return reviewMapper.selectReviewListBySellerIdHasReviewDesc(sellerId);
+	}
 }
