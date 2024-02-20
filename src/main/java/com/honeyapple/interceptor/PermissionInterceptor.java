@@ -32,9 +32,10 @@ public class PermissionInterceptor implements HandlerInterceptor {
 		
 		// 비로그인 상태 + (추가 조건하에) => 1. 로그인 페이지로 이동, 2. 컨트롤러 수행 방지 (URL 설계상 이렇게 되야함)
 		if (userId == null) {
-			// /post, /chat, /my-trade
+			// /post, /chat, /my-trade, /review
 			if (uri.startsWith("/post") || uri.startsWith("/chat")
-					|| uri.startsWith("/my-trade")) {
+					|| uri.startsWith("/my-trade")
+					|| uri.startsWith("/review")) {
 				response.sendRedirect("/user/sign-in-view"); // 1. 로그인 페이지로 리다이렉트
 				return false; // 2. 기존 요청에 대한 컨트롤러 수행 방지
 			}
