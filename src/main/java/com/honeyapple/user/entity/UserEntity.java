@@ -45,7 +45,7 @@ public class UserEntity {
 	@Builder.Default
 	private Double temperature = 36.5;
 	
-	private String type;
+	private String type;   // 외부 API 로그인 할 경우를 위한 컬럼
 	
 	@UpdateTimestamp
 	@Column(name = "createdAt", updatable = false)

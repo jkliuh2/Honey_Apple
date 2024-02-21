@@ -41,7 +41,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
 			}
 		}
 		
-		// 로그인상태 && /user => 1. 글목록 페이지로 이동, 2. 컨트롤러 수행 방지
+		// 로그인상태 && /user/sign => 1. 글목록 페이지로 이동, 2. 컨트롤러 수행 방지
 		if (userId != null && uri.startsWith("/user/sign")) {
 			response.sendRedirect("/honey-apple");
 			return false;

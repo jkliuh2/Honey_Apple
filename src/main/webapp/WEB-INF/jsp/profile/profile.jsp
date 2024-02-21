@@ -23,7 +23,7 @@
 		<%-- 정보 수정 버튼(프로필유저 = 로그인유저) --%>
 		<div class="col-3 d-flex justify-content-end align-items-center">
 			<c:if test="${userId eq user.id}">
-			<button type="button" id="userUpdateBtn" class="btn btn-secondary">정보 수정</button>
+			<a href="/user/identity-verification-view" class="btn btn-secondary">정보 수정</a>
 			</c:if>
 		</div>
 	</div> <%-- 프로필 유저정보 끝 --%>

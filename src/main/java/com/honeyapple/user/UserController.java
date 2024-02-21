@@ -1,9 +1,13 @@
 package com.honeyapple.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.honeyapple.user.bo.UserBO;
+import com.honeyapple.user.entity.UserEntity;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -11,7 +15,10 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class UserController {
 // view 컨트롤러
-
+	
+	@Autowired
+	private UserBO userBO;
+	
 
 	/**
 	 * 회원가입 view
@@ -45,6 +52,7 @@ public class UserController {
 	
 	/**
 	 * 로그아웃
+	 * 필터 예외처리 OK
 	 * 
 	 * @param session
 	 * @return
@@ -55,5 +63,47 @@ public class UserController {
 		session.removeAttribute("userLoginId");
 		session.removeAttribute("userNickname");
 		return "redirect:/user/sign-in-view";
+	}
+	
+	
+	// 본인인증 페이지 view(필터처리X, 비-로그인처리 필요)
+	@GetMapping("/identity-verification-view")
+	public String identityVerificationView(
+			HttpSession session,
+			Model model) {
+		
+		// 비-로그인 처리
+		Integer userId = (Integer)session.getAttribute("userId");
+		if (userId == null) {
+			return "redirect:/user/sign-in-view";
+		}
+		
+		// 토큰 select -> 토큰존재할 경우, 유저 정보 수정 페이지로 리다이렉트
+		
+		
+		// 응답
+		model.addAttribute("viewName", "user/identityVerification");
+		model.addAttribute("titleName", "본인인증");
+		return "template/layout";
+	}
+	
+	
+	// 유저정보 수정 페이지
+	@GetMapping("/update-view")
+	public String updateView(HttpSession session, Model model) {
+		
+		// 세션에서 userId
+		int userId = (int)session.getAttribute("userId");
+		
+		// 토큰 확인(본인인증)
+		
+		// 유저 정보 select
+		UserEntity user = userBO.getUserEntityById(userId);
+		
+		// 응답
+		model.addAttribute("user", user);
+		model.addAttribute("viewName", "user/update");
+		model.addAttribute("titleName", "정보수정");
+		return "template/layout";
 	}
 }

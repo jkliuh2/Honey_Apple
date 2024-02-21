@@ -174,4 +174,42 @@ public class UserRestController {
 		
 		return result;
 	}
+	
+	
+	// 본인인증 API
+	@PostMapping("/identity-verification")
+	public Map<String, Object> identityVerification(
+			@RequestParam("loginId") String loginId,
+			@RequestParam("password") String password,
+			HttpSession session) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		// 세션 상태 확인
+		Integer userId = (Integer)session.getAttribute("userId");
+		if (userId == null) {
+			result.put("code", 400);
+			result.put("error_message", "세션이 만료되었습니다.");
+			return result;
+		}
+		
+		// 비밀번호 암호화
+		String hashedPassword = EncryptUtils.shaAndHex(password, "SHA-256");
+		
+		// 입력한 loginId+password로 user 가져오기
+		UserEntity user = userBO.getUserEntityByLoginIdPassword(loginId, hashedPassword);
+		if (user == null || user.getId() != userId) {
+			// 아이디, 비번이 틀림 or 다른 사람것을 가져옴.
+			result.put("code", 300);
+			result.put("error_message", "로그인 정보가 잘못되었습니다.");
+			return result;
+		}
+		
+		// 토큰 발급
+		
+		
+		// 응답
+		result.put("code", 200);
+		return result;
+	}
 }
