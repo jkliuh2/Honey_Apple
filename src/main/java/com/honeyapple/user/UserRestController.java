@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.honeyapple.aop.TimeTrace;
 import com.honeyapple.common.EncryptUtils;
@@ -209,6 +210,33 @@ public class UserRestController {
 		
 		
 		// 응답
+		result.put("code", 200);
+		return result;
+	}
+	
+	
+	// 유저 정보 수정 API
+	@PostMapping("/update")
+	public Map<String, Object> update(
+			@RequestParam("nickname") String nickname,
+			@RequestParam(name = "password", required = false) String password,
+			@RequestParam(name = "profileImgFile", required = false) MultipartFile profileImgFile,
+			@RequestParam("emptyProfile") boolean emptyProfile,
+			HttpSession session) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		
+		// 비밀번호 null처리 및 암호화
+		String hashedPassword = null;
+		if (password != "" || password != null) {
+			hashedPassword = EncryptUtils.shaAndHex(password, "SHA-256");
+		}
+		
+		// 세션에서 로그인정보 가져오기
+		int userId = (int)session.getAttribute("userId");
+		
+		// BO로 전달
+		
+		
+		Map<String, Object> result = new HashMap<>();
 		result.put("code", 200);
 		return result;
 	}

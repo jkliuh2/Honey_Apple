@@ -92,8 +92,11 @@ public class UserController {
 	@GetMapping("/update-view")
 	public String updateView(HttpSession session, Model model) {
 		
-		// 세션에서 userId
-		int userId = (int)session.getAttribute("userId");
+		// 세션 정보 가져오기 + 비-로그인 처리
+		Integer userId = (Integer)session.getAttribute("userId");
+		if (userId == null) {
+			return "redirect:/user/sign-in-view";
+		}
 		
 		// 토큰 확인(본인인증)
 		

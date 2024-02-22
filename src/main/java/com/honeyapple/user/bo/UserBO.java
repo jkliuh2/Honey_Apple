@@ -2,6 +2,7 @@ package com.honeyapple.user.bo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.honeyapple.user.entity.UserEntity;
 import com.honeyapple.user.repository.UserRepository;
@@ -92,5 +93,14 @@ public class UserBO {
 		// 여기까지 왔으면, password만 틀린 상황. -> user에 password를 비워서 보내자
 		user = user.toBuilder().password(null).build();
 		return user;
+	}
+	
+	
+	//////////////////////////////////////////////////
+	
+	// 유저 정보 수정 
+	public void updateUser(int userId, String nickname, String password, 
+			MultipartFile profileImgFile, boolean emptyProfile) {
+		
 	}
 }
