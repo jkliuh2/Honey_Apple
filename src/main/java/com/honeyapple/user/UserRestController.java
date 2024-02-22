@@ -171,6 +171,7 @@ public class UserRestController {
 			session.setAttribute("userId", user.getId());
 			session.setAttribute("userLoginId", user.getLoginId());
 			session.setAttribute("userNickname", user.getNickname());
+			session.setAttribute("userProfileImagePath", user.getProfileImagePath());
 		}
 		
 		return result;
@@ -224,18 +225,21 @@ public class UserRestController {
 			@RequestParam("emptyProfile") boolean emptyProfile,
 			HttpSession session) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		
-		// 비밀번호 null처리 및 암호화
+		// 비밀번호 null처리 및 암호화 // 잘 안되는중
 		String hashedPassword = null;
-		if (password != "" || password != null) {
+		if (password.equals("")) {
 			hashedPassword = EncryptUtils.shaAndHex(password, "SHA-256");
 		}
 		
 		// 세션에서 로그인정보 가져오기
 		int userId = (int)session.getAttribute("userId");
 		
-		// BO로 전달
+		// BO로 전달 -> 수정된 user 정보 리턴
+		userBO.updateUser(userId, nickname, hashedPassword, profileImgFile, emptyProfile);
 		
+		// 수정된 user 정보를 세션에 넣기
 		
+		// 응답
 		Map<String, Object> result = new HashMap<>();
 		result.put("code", 200);
 		return result;

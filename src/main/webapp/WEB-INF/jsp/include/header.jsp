@@ -24,7 +24,12 @@
 		<div class="col-4 d-flex justify-content-between">
 			<%-- 유저 정보 --%>
 			<a href="/profile?userId=${userId}" class="h-100 d-flex align-items-center">
+				<c:if test="${empty userProfileImagePath}">
 				<img src="/static/img/blank-profile.webp" alt="프로필 이미지" width="60" height="60">
+				</c:if>
+				<c:if test="${not empty userProfileImagePath}">
+				<img src="${userProfileImagePath}" alt="프로필 이미지" width="60" height="60">
+				</c:if>
 				<span class="text-dark ml-2">${userNickname}</span>
 			</a>
 			

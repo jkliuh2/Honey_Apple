@@ -80,9 +80,12 @@
 		// 정보수정 버튼 이벤트
 		$('#updateBtn').on('click', function() {
 			// 유효성 체크 - 아이디체크
-			if (!$('#nicknameDuplTrue').hasClass('d-none') 
-					|| $('#NowNickname').hasClass('invisible')) {
-				alert("안된다.");
+			if (!$('#nicknameDuplTrue').hasClass('d-none')) {
+				alert("중복된 닉네임입니다.");
+				return;
+			}
+			if ($('#NowNickname').hasClass('invisible')) {
+				alert("닉네임 중복확인이 필요합니다.");
 				return;
 			}
 			let nickname = $('input[name=nickname]').val().trim(); 
@@ -131,8 +134,7 @@
 						alert("유저정보를 성공적으로 수정했습니다. 프로필 화면으로 돌아갑니다.");
 						location.href="/profile?userId=" + ${userId};
 					} else {
-						alert(data.error_message);
-						location.reload();
+						alert("유저정보 수정에 실패했습니다.");
 					}
 				}
 				, error:function(request, status, error) {
@@ -145,7 +147,10 @@
 		$('#emptyImg').on('click', function() {
 			$('#profileImgFile').val(""); // input 비우기
 			$('#profileImg').attr("src", "/static/img/blank-profile.webp"); // 기본이미지로 변경
-			$(this).prop("disabled", true); // 프로필 비우기 버튼 비활성화
+			
+			if (${user.profileImagePath != null}) {
+				$(this).prop("disabled", true); // 프로필 비우기 버튼 비활성화
+			}
 		}); // 프로필 비우기 끝
 		
 		// 프로필 이미지 변경 이벤트
@@ -217,9 +222,11 @@
 						if (data.is_duplicated_nickname) {
 							// 중복O
 							$('#nicknameDuplTrue').removeClass('d-none');
+							$('#NowNickname').removeClass("invisible");
 						} else {
 							// 중복X
 							$('#nicknameDuplFalse').removeClass('d-none');
+							$('#NowNickname').removeClass("invisible");
 						}
 					}
 				}
@@ -233,13 +240,12 @@
 		$('input[name=nickname]').on('change', function() {
 			$('.nicknameMessage').addClass("d-none");
 			$('#NowNickname').removeClass("d-none");
+			$('#NowNickname').removeClass("invisible");
 			
 			let nickname = $(this).val().trim();
-			if (nickname == "${user.nickname}") {
-				$('#NowNickname').removeClass("invisible");
-				return
+			if (nickname != "${user.nickname}") { // 현재의 닉네임과 같지 않으면
+				$('#NowNickname').addClass("invisible"); // 글자 안보이게 한다.
 			}
-			$('#NowNickname').addClass("invisible");
 		}); // 닉네임 change이벤트 끝
 	}); // 레디이벤트
 </script>

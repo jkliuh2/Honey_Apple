@@ -4,14 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.honeyapple.common.FileManagerService;
 import com.honeyapple.user.entity.UserEntity;
+import com.honeyapple.user.mapper.UserMapper;
 import com.honeyapple.user.repository.UserRepository;
 
 @Service
 public class UserBO {
 
 	@Autowired
+	private UserMapper userMapper;
+	
+	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private FileManagerService fileManagerService;
 
 	///////////////////////////////////////////////////// 간단한 메소드들
 	// loginId로 select
@@ -101,6 +109,28 @@ public class UserBO {
 	// 유저 정보 수정 
 	public void updateUser(int userId, String nickname, String password, 
 			MultipartFile profileImgFile, boolean emptyProfile) {
+		UserEntity user = userRepository.findById(userId).orElse(null);
 		
+		// File 업로드 및 Path 변환
+		String profileImagePath = null;
+		if (profileImgFile != null) {
+			profileImagePath = fileManagerService.saveFile(user.getLoginId(), profileImgFile);
+		}
+		
+		// emptyProfile T/F 여부에 따라 업데이트 + 기존 이미지 삭제처리
+		// 1. emptyProfile == true (무조건 ImgFile은 null로 들어옴.)
+		// ImgPath를 NULL로 변경(무조건 기존 이미지 존재하므로 삭제처리 해야 한다.
+		// 2. emptyProfile == false
+		// ImgFile이 존재하면 변경. null이면 유지.
+		
+		// update - mapper에서 if문으로 처리
+		userMapper.updateUser(userId, nickname, password, 
+				profileImagePath, emptyProfile); 
+		
+		// 기존 이미지 삭제 -> 조건 모두 합쳐서 정리
+		if ((emptyProfile || profileImgFile != null) 
+				&& user.getProfileImagePath() != null) {
+			fileManagerService.deleteFile(user.getProfileImagePath());
+		} 
 	}
 }

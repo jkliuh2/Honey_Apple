@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.honeyapple.user.mapper.UserMapper">
+ 	<update id="updateUser">
+ 	UPDATE `user`
+	SET
+		`nickname` = #{nickname}
+		<if test="password != null">
+		, `password` = #{password}
+		</if>
+		<choose>
+			<when test="emptyProfile">
+			, `profileImagePath` = NULL
+			</when>
+			<when test="profileImagePath != null">
+			, `profileImagePath` = #{profileImagePath}
+			</when>
+		</choose>
+	WHERE `id` = #{userId};
+ 	</update>
+ </mapper>
