@@ -70,6 +70,7 @@
 			let file = e.target.files[0];
 			let idNum = Number($(this).attr("id").split("e")[1]); // id의 숫자값
 			
+			// 업로드되있던 파일을 취소했을 때.
 			if (file == null) {
 				// 해당 input 이하의 모든 input들을 비워야 한다.
 				for (let i = idNum; i < 5; i++) {
