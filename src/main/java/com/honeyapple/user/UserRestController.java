@@ -16,10 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.honeyapple.aop.TimeTrace;
 import com.honeyapple.common.EncryptUtils;
 import com.honeyapple.user.bo.UserBO;
+import com.honeyapple.user.domain.User;
 import com.honeyapple.user.entity.UserEntity;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequestMapping("/user")
 @RestController
 public class UserRestController {
@@ -140,7 +144,7 @@ public class UserRestController {
 	public Map<String, Object> signIn(
 			@RequestParam("loginId") String loginId,
 			@RequestParam("password") String password,
-			HttpSession session) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+			HttpServletRequest request) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		
 		// 비밀번호 암호화
 		String hashedPassword = EncryptUtils.shaAndHex(password, "SHA-256");
@@ -168,6 +172,7 @@ public class UserRestController {
 			result.put("login_message", user.getNickname() + "님 환영합니다!");
 			
 			// 세션에 회원정보 저장
+			HttpSession session = request.getSession();
 			session.setAttribute("userId", user.getId());
 			session.setAttribute("userLoginId", user.getLoginId());
 			session.setAttribute("userNickname", user.getNickname());
@@ -235,7 +240,7 @@ public class UserRestController {
 		int userId = (int)session.getAttribute("userId");
 		
 		// BO로 전달 -> 수정된 user 정보 리턴
-		UserEntity user = userBO.updateUser(userId, nickname, hashedPassword, profileImgFile, emptyProfile);
+		User user = userBO.updateUser(userId, nickname, hashedPassword, profileImgFile, emptyProfile);
 		
 		// 기존 세션의 유저정보 삭제
 		session.removeAttribute("userId");
@@ -247,6 +252,7 @@ public class UserRestController {
 		session.setAttribute("userLoginId", user.getLoginId());
 		session.setAttribute("userNickname", user.getNickname());
 		session.setAttribute("userProfileImagePath", user.getProfileImagePath());
+		log.info("%%%%%%%% session.userNickname" + session.getAttribute("userNickname"));
 		
 		// 응답
 		Map<String, Object> result = new HashMap<>();

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.honeyapple.common.FileManagerService;
+import com.honeyapple.user.domain.User;
 import com.honeyapple.user.entity.UserEntity;
 import com.honeyapple.user.mapper.UserMapper;
 import com.honeyapple.user.repository.UserRepository;
@@ -107,7 +108,7 @@ public class UserBO {
 	//////////////////////////////////////////////////
 	
 	// 유저 정보 수정 
-	public UserEntity updateUser(int userId, String nickname, String password, 
+	public User updateUser(int userId, String nickname, String password, 
 			MultipartFile profileImgFile, boolean emptyProfile) {
 		UserEntity user = userRepository.findById(userId).orElse(null);
 		
@@ -134,6 +135,6 @@ public class UserBO {
 		} 
 		
 		// 업데이트로 변경된 user 정보 리턴하기
-		return userRepository.findById(userId).orElse(null);
+		return userMapper.selectUserById(userId);
 	}
 }

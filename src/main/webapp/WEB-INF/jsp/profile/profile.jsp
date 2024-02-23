@@ -9,7 +9,12 @@
 		<%-- 유저 정보 --%>
 		<div class="col-9 d-flex p-0">
 			<%-- 프로필 이미지 --%>
-			<img src="/static/img/blank-profile.webp" width="70" height="70" alt="프로필 이미지">
+			<c:if test="${not empty user.profileImagePath}">
+				<img src="${user.profileImagePath}" width="70" height="70" alt="프로필 이미지">
+			</c:if>
+			<c:if test="${empty user.profileImagePath}">
+				<img src="/static/img/blank-profile.webp" width="70" height="70" alt="프로필 이미지">
+			</c:if>
 			<%-- 닉네임, 매너온도 --%>
 			<div class="ml-2">
 				<div class="font-weight-bold">${user.nickname}</div>

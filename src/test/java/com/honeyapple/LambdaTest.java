@@ -20,7 +20,7 @@ public class LambdaTest {
 		.forEach(fruit -> log.info("### {}", fruit)); // 뽑은 걔를 log찍을 것이다.
 	}
 	
-	@Test
+	//@Test
 	void 람다테스트2() {
 		// 2. List의 값들을 모두 대문자로 변환하기.
 		List<String> list = List.of("apple", "banana", "cherry");
@@ -32,5 +32,18 @@ public class LambdaTest {
 		
 		// 위에서 list를 대문자로 모두 변환한 다음 저장했음.
 		log.info(list.toString()); // [APPLE, BANANA, CHERRY]
+	}
+	
+	@Test
+	void 메소드레퍼런스() {
+		List<String> fruits = List.of("apple", "banana", "cherry");
+		fruits = fruits
+				.stream()
+				.map(String::toUpperCase) // List에서 꺼내는 걔는 String. 그 String에 to~ 메소드를 적용하겠다.
+				// 메소드 이름만 가져옴. (이렇게 메소드를 "참조" 하는 것이 메소드 레퍼런스)
+				.collect(Collectors.toList()); // stream to List
+		// 여기까지 하면 람다식2 와 동일한 방식
+		
+		log.info(fruits.toString());
 	}
 }
