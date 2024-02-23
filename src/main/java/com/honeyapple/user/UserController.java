@@ -62,6 +62,7 @@ public class UserController {
 		session.removeAttribute("userId");
 		session.removeAttribute("userLoginId");
 		session.removeAttribute("userNickname");
+		session.removeAttribute("userProfileImagePath");
 		return "redirect:/user/sign-in-view";
 	}
 	

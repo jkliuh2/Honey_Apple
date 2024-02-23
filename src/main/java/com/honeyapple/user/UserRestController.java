@@ -227,7 +227,7 @@ public class UserRestController {
 		
 		// 비밀번호 null처리 및 암호화 // 잘 안되는중
 		String hashedPassword = null;
-		if (password.equals("")) {
+		if (!password.equals("")) {
 			hashedPassword = EncryptUtils.shaAndHex(password, "SHA-256");
 		}
 		
@@ -235,9 +235,18 @@ public class UserRestController {
 		int userId = (int)session.getAttribute("userId");
 		
 		// BO로 전달 -> 수정된 user 정보 리턴
-		userBO.updateUser(userId, nickname, hashedPassword, profileImgFile, emptyProfile);
+		UserEntity user = userBO.updateUser(userId, nickname, hashedPassword, profileImgFile, emptyProfile);
 		
-		// 수정된 user 정보를 세션에 넣기
+		// 기존 세션의 유저정보 삭제
+		session.removeAttribute("userId");
+		session.removeAttribute("userLoginId");
+		session.removeAttribute("userNickname");
+		session.removeAttribute("userProfileImagePath");
+		// 새로운 유저 정보로 다시 저장
+		session.setAttribute("userId", user.getId());
+		session.setAttribute("userLoginId", user.getLoginId());
+		session.setAttribute("userNickname", user.getNickname());
+		session.setAttribute("userProfileImagePath", user.getProfileImagePath());
 		
 		// 응답
 		Map<String, Object> result = new HashMap<>();

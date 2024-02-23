@@ -107,7 +107,7 @@ public class UserBO {
 	//////////////////////////////////////////////////
 	
 	// 유저 정보 수정 
-	public void updateUser(int userId, String nickname, String password, 
+	public UserEntity updateUser(int userId, String nickname, String password, 
 			MultipartFile profileImgFile, boolean emptyProfile) {
 		UserEntity user = userRepository.findById(userId).orElse(null);
 		
@@ -132,5 +132,8 @@ public class UserBO {
 				&& user.getProfileImagePath() != null) {
 			fileManagerService.deleteFile(user.getProfileImagePath());
 		} 
+		
+		// 업데이트로 변경된 user 정보 리턴하기
+		return userRepository.findById(userId).orElse(null);
 	}
 }
