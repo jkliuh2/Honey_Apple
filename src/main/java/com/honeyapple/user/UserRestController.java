@@ -21,9 +21,7 @@ import com.honeyapple.user.entity.UserEntity;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequestMapping("/user")
 @RestController
 public class UserRestController {
@@ -252,7 +250,6 @@ public class UserRestController {
 		session.setAttribute("userLoginId", user.getLoginId());
 		session.setAttribute("userNickname", user.getNickname());
 		session.setAttribute("userProfileImagePath", user.getProfileImagePath());
-		log.info("%%%%%%%% session.userNickname" + session.getAttribute("userNickname"));
 		
 		// 응답
 		Map<String, Object> result = new HashMap<>();

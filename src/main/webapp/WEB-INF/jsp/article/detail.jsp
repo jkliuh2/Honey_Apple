@@ -123,7 +123,7 @@
 		
 		<%-- 수정버튼(판매자용) --%>
 		<div class="col-3">
-			<c:if test="${article.post.sellerId eq userId}">
+			<c:if test="${article.post.sellerId eq userId && article.post.status eq '판매중'}">
 				<a href="/post/update-view?postId=${article.post.id}" class="btn btn-secondary form-control">수정</a>
 			</c:if>
 		</div>

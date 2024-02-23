@@ -16,9 +16,7 @@ import com.honeyapple.user.bo.UserBO;
 import com.honeyapple.user.entity.UserEntity;
 
 import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 public class ProfileController {
 // 프로필 관련 Controller
@@ -57,7 +55,6 @@ public class ProfileController {
 		model.addAttribute("articleList", articleList); // 판매물품 리스트 정보
 		model.addAttribute("viewName", "profile/profile");
 		model.addAttribute("titleName", user.getNickname());
-		log.info("@#@#@#@ session.userNickname: {}", session.getAttribute("userNickname"));
 		return "template/layout";
 	}
 	
