@@ -36,7 +36,7 @@
 			<%-- 내 꿀템들 + 로그아웃 --%>
 			<div>
 				<div class="h-50 d-flex align-items-center">
-					<a href="#" class="font-weight-bold text-warning">내 꿀템들</a>
+					<a href="/my-trade" class="font-weight-bold text-warning">내 꿀템들</a>
 				</div>
 				<div class="h-50">
 					<a href="/user/sign-out" class="sign-in-out">로그아웃</a>

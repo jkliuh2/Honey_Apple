@@ -1,8 +1,11 @@
 package com.honeyapple.interest.bo;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.honeyapple.interest.domain.Interest;
 import com.honeyapple.interest.mapper.InterestMapper;
 
 @Service
@@ -32,7 +35,6 @@ public class InterestBO {
 	public int getInterestCountByPostId(int postId) {
 		return interestMapper.selectInterestCountByPostIdUserId(postId, null);
 	}
-	
 	// select) postId, userId로 관심 정보 있는지 확인하기
 	public boolean filledHeart(int postId, int userId) {
 		if (interestMapper.selectInterestCountByPostIdUserId(postId, userId) > 0) {
@@ -40,5 +42,9 @@ public class InterestBO {
 		} else {
 			return false;
 		}
+	}
+	// select) buyerId로 관심List 가져오기(최신정렬)
+	public List<Interest> getInterestListByBuyerIdSortByRecentest(int buyerId) {
+		return interestMapper.selectInterestListByBuyerIdOrderByCreatedAtDesc(buyerId);
 	}
 }

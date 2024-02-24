@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.honeyapple.article.domain.Article;
+import com.honeyapple.chat.entity.ChatEntity;
 import com.honeyapple.interest.bo.InterestBO;
+import com.honeyapple.interest.domain.Interest;
 import com.honeyapple.post.bo.PostBO;
 import com.honeyapple.post.domain.Post;
 import com.honeyapple.user.bo.UserBO;
@@ -87,7 +89,7 @@ public class ArticleBO {
 	}
 	
 	
-	// sellerId + Status로 게시글 전부 가져오기
+	// 판매자 기준) sellerId + Status로 게시글 전부 가져오기
 	public List<Article> getArticleListBySellerIdStatus(int sellerId, String status, String exceptStatus) {
 		// 필요정보:post, seller, 관심count
 		UserEntity seller = userBO.getUserEntityById(sellerId);
@@ -103,6 +105,36 @@ public class ArticleBO {
 			article.setInterestCount(interestBO.getInterestCountByPostId(post.getId()));
 			articleList.add(article);
 		}
+		return articleList;
+	}
+	
+	// 구매자 기준) buyerId + 관심등록한 글 List 가져오기(관심등록시간 기준 최신정렬)
+	public List<Article> getHasInterestArticleListByBuyerId(int buyerId) {
+		List<Article> articleList = new ArrayList<>();
+		
+		// buyerId가 등록한 관심List(최신순 정렬) 가져오기
+		List<Interest> interestList = interestBO.getInterestListByBuyerIdSortByRecentest(buyerId);
+		
+		// interest의 postId로 article 세팅하기
+		for (Interest interest : interestList) {
+			Article article = new Article();
+			
+			// post
+			Post post = postBO.getPostById(interest.getPostId());
+			article.setPost(post);
+			
+			// user(seller)
+			UserEntity user = userBO.getUserEntityById(post.getSellerId());
+			article.setUser(user);
+			
+			// 관심Count
+			int interestCount = interestBO.getInterestCountByPostId(post.getId());
+			article.setInterestCount(interestCount);
+			
+			// List에 넣기
+			articleList.add(article);
+		}
+		
 		return articleList;
 	}
 }
