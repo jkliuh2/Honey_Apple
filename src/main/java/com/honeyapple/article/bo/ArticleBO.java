@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.honeyapple.article.domain.Article;
+import com.honeyapple.chat.bo.ChatBO;
 import com.honeyapple.chat.entity.ChatEntity;
 import com.honeyapple.interest.bo.InterestBO;
 import com.honeyapple.interest.domain.Interest;
@@ -23,6 +24,9 @@ public class ArticleBO {
 	
 	@Autowired
 	private UserBO userBO;
+	
+	@Autowired
+	private ChatBO chatBO;
 	
 	@Autowired
 	private InterestBO interestBO;
@@ -108,19 +112,66 @@ public class ArticleBO {
 		return articleList;
 	}
 	
-	// 구매자 기준) buyerId + 관심등록한 글 List 가져오기(관심등록시간 기준 최신정렬)
-	public List<Article> getHasInterestArticleListByBuyerId(int buyerId) {
+	// my-trade에서의 Article 가져오는 메소드
+	// input: buyerId, menu / output: List<Article>
+	// ★ 나중에 menu도 enum으로 설정해야하듯.
+	public List<Article> getMyTradeArticleListByBuyerId(
+			int buyerId, String menu) {
+		// 최종 리턴할 ArticleList
 		List<Article> articleList = new ArrayList<>();
+		// article 하나와 1:1 대응하는 post의 List
+		List<Post> postList = new ArrayList<>(); 
 		
-		// buyerId가 등록한 관심List(최신순 정렬) 가져오기
-		List<Interest> interestList = interestBO.getInterestListByBuyerIdSortByRecentest(buyerId);
+		// 1. menu에 따른 postList 설정
+		if (menu == null) { // 기본페이지(관심등록 List)
+			// buyerId가 등록한 관심List(최신순 정렬) 가져오기
+			List<Interest> interestList = interestBO.getInterestListByBuyerIdSortByRecentest(buyerId);
+			
+			// interest의 postId로 postList 세팅하기
+			for (Interest interest : interestList) {
+				// post 설정
+				Post post = postBO.getPostById(interest.getPostId());
+				postList.add(post);
+			}
+		} else if (menu.equals("wantToBuyList")) { // 거래제안글(채팅방 존재 글)
+			// buyerId로 채팅방 리스트(updatedAt 최신순 정렬) 가져오기
+			List<ChatEntity> chatList = chatBO.getChatEntityListByBuyerIdDesc(buyerId);
+			
+			// chat의 postId로 postList 세팅하기
+			for (ChatEntity chat : chatList) {
+				// post 설정
+				Post post = postBO.getPostById(chat.getPostId());
+				postList.add(post);
+			}
+		} else if (menu.equals("reservationList")) { // 예약중인 글
+			// buyerId + "예약" 상태 채팅방 리스트(updatedAt 최신순 정렬)
+			List<ChatEntity> chatList = chatBO.getChatEntityListByBuyerIdTradeStatusDesc(buyerId, "예약");
+			
+			// chat의 postId로 postList 세팅하기
+			for (ChatEntity chat : chatList) {
+				// post 설정
+				Post post = postBO.getPostById(chat.getPostId());
+				postList.add(post);
+			}
+		} else if (menu.equals("purchaseComplete")) { // 구매완료 글
+			// buyerId + "완료" 상태 채팅방 리스트(updatedAt 최신순 정렬)
+			List<ChatEntity> chatList = chatBO.getChatEntityListByBuyerIdTradeStatusDesc(buyerId, "예약");
+			
+			// chat의 postId로 postList 세팅하기
+			for (ChatEntity chat : chatList) {
+				// post 설정
+				Post post = postBO.getPostById(chat.getPostId());
+				postList.add(post);
+			}
+		}
 		
-		// interest의 postId로 article 세팅하기
-		for (Interest interest : interestList) {
+		
+		
+		// 2. 위에서 설정한 postList로 article 세팅해서 List에 넣기
+		for (Post post : postList) {
 			Article article = new Article();
 			
 			// post
-			Post post = postBO.getPostById(interest.getPostId());
 			article.setPost(post);
 			
 			// user(seller)

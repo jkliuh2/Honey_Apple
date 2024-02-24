@@ -189,7 +189,7 @@
 			}
 			
 			// 2. ajax - 예약 토글
-			let chatId = ${chatRoomView.chat.id};
+			let chatId = $('#reservationModal').data("chat-id");
 			$.ajax({
 				type:"POST"
 				, url:"/chat/trade-reservation-toggle"

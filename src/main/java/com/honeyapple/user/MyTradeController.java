@@ -32,7 +32,7 @@ public class MyTradeController {
 		int userId = (int)session.getAttribute("userId");
 		
 		// DB - user가 관심을 표시한 글 List<Article> 가져오기
-		List<Article> articleList = articleBO.getHasInterestArticleListByBuyerId(userId);
+		List<Article> articleList = articleBO.getMyTradeArticleListByBuyerId(userId, null);
 		
 		// 응답값
 		model.addAttribute("articleList", articleList);
@@ -46,13 +46,16 @@ public class MyTradeController {
 	@GetMapping("/my-trade/change-menu")
 	public String changeMenu(
 			@RequestParam("menu") String menu,
-			HttpSession session) {
+			HttpSession session,
+			Model model) {
 		
 		// 유저정보 꺼내기(buyerId)
 		int userId = (int)session.getAttribute("userId");
 		
+		// DB - menu에 따른 데이터 가져오기
+		List<Article> articleList = articleBO.getMyTradeArticleListByBuyerId(userId, menu);
+		model.addAttribute("articleList", articleList);
 		
-		
-		return "myTrade/" + menu;
+		return "myTrade/articleList";
 	}
 }

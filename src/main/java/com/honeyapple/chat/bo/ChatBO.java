@@ -33,6 +33,15 @@ public class ChatBO {
 	public ChatEntity getChatEntityByChatIdBuyerId(int chatId, int buyerId) {
 		return chatRepository.findByIdAndBuyerId(chatId, buyerId);
 	}
+	// select(buyerId) - List(updatedAt Desc)
+	public List<ChatEntity> getChatEntityListByBuyerIdDesc(int buyerId) {
+		return chatRepository.findByBuyerIdOrderByUpdatedAtDesc(buyerId);
+	}
+	// select(buyerId + tradeStatus) - List(updatedAt Desc)
+	public List<ChatEntity> getChatEntityListByBuyerIdTradeStatusDesc(
+			int buyerId, String tradeStatus) {
+		return chatRepository.findByBuyerIdAndTradeStatusOrderByUpdatedAtDesc(buyerId, tradeStatus);
+	}
 	
 	// insert
 	public ChatEntity addChat(int postId, int buyerId) {
