@@ -29,5 +29,6 @@ public interface PostMapper {
 	public void updatePostByIdStatus(
 			@Param("postId") int postId,
 			@Param("status") String status);
-	
+	// update(글 수정)
+	public void updatePost(Post post);
 }

@@ -72,4 +72,34 @@ public class PostRestController {
 		
 		return result;
 	}
+	
+	
+	// 글 수정 API
+	@PostMapping("/update")
+	public Map<String, Object> update(
+			@RequestParam("postId") int postId,
+			@RequestParam("subject") String subject,
+			@RequestParam("price") int price,
+			@RequestParam("negotiable") int negotiable,
+			@RequestParam("content") String content,
+			@RequestParam(name = "imgFile2", required = false) MultipartFile imgFile2,
+			@RequestParam(name = "imgFile3", required = false) MultipartFile imgFile3,
+			@RequestParam(name = "imgFile4", required = false) MultipartFile imgFile4,
+			@RequestParam(name = "imgFile5", required = false) MultipartFile imgFile5,
+			HttpSession session) {
+		
+		// 세션의 유저정보 가져오기
+		int userId = (int)session.getAttribute("userId");
+		String userLoginId = (String)session.getAttribute("userLoginId");
+		
+		// DB - update
+		postBO.updatePost(userId, userLoginId, postId, subject, content, price, negotiable,
+				imgFile2, imgFile3, imgFile4, imgFile5);
+		
+		// 응답값
+		Map<String, Object> result = new HashMap<>();
+		result.put("code", 200);
+		result.put("postId", postId);
+		return result;
+	}
 }

@@ -121,4 +121,20 @@
  		, `updatedAt` = NOW()
  	WHERE `id` = #{postId}
  	</update>
+ 	<!-- update(글수정) -->
+ 	<update id="updatePost" parameterType="com.honeyapple.post.domain.Post">
+ 	UPDATE `post`
+ 	SET
+		`subject` = #{subject}
+		,`price` = #{price}
+		,`negotiable` = #{negotiable}
+		,`content` = #{content}
+		,`imgPath2` = #{imgPath2}
+		,`imgPath3` = #{imgPath3}
+		,`imgPath4` = #{imgPath4}
+		,`imgPath5` = #{imgPath5}
+		,`updatedAt` = NOW()
+ 	WHERE `id` = #{id}
+ 	AND `sellerId` = #{sellerId}
+ 	</update>
  </mapper>

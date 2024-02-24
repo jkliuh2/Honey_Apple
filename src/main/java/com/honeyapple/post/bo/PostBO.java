@@ -86,4 +86,49 @@ public class PostBO {
 	public void updatePostByIdStatus(int postId, String status) {
 		postMapper.updatePostByIdStatus(postId, status);
 	}
+	// update - 글 수정
+	public void updatePost(int userId, String userLoginId, int postId, 
+			String subject, String content, int price, int negotiable,
+			MultipartFile imgFile2, MultipartFile imgFile3, 
+			MultipartFile imgFile4, MultipartFile imgFile5) {
+		
+		// 이미지 파일 처리
+		List<MultipartFile> imgFileList = new ArrayList<>();
+		// img1은 필수
+		imgFileList.add(imgFile2);
+		imgFileList.add(imgFile3);
+		imgFileList.add(imgFile4);
+		imgFileList.add(imgFile5);
+		
+		List<String> imgPathList = new ArrayList<>();
+		
+		for (MultipartFile imgFile : imgFileList) {
+			String imgPath = null; // DB로 전달되는 이미지파일Path
+			
+			if (imgFile != null) {
+				// File이 null이 아니면 path 변환
+				imgPath = fileManagerService.saveFile(userLoginId, imgFile); // 이미지 파일저장 + Path리턴(File없으면 NULL)
+			}
+			imgPathList.add(imgPath); // path or null
+		}
+		/////// 이미지 파일 -> path로 전환 끝
+		
+		// DTO에 담기
+		Post post = new Post();
+		// id, sellerId로 WHERE문 구성
+		post.setId(postId);
+		post.setSellerId(userId);
+		// 이 밑으로는 모두 SET 필드들
+		post.setSubject(subject);
+		post.setPrice(price);
+		post.setNegotiable(negotiable);
+		post.setContent(content);
+		post.setImgPath2(imgPathList.get(0));
+		post.setImgPath3(imgPathList.get(1));
+		post.setImgPath4(imgPathList.get(2));
+		post.setImgPath5(imgPathList.get(3));
+		
+		// DB - update
+		postMapper.updatePost(post);
+	}
 }

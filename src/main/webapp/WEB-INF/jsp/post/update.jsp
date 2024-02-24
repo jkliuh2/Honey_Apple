@@ -84,28 +84,28 @@
 
 <script>
 	$(document).ready(function() {
-		// document 준비된 후 호출되는 함수들
-			// price input 넣기
-			$('#price').val(${post.price} / 1000); 
-			// 기존 업로드 파일 처리
-			var arr = [,,,,];
-			arr[0] = "${post.imgPath1}"; // NULL이면 ""로 저장
-			arr[1] = "${post.imgPath2}";
-			arr[2] = "${post.imgPath3}";
-			arr[3] = "${post.imgPath4}";
-			arr[4] = "${post.imgPath5}";
-			for (let i = 0; i < 5; i++) {
-				if (arr[i] == "") {
-					break;
-				}
-				// 이미 파일 존재하는 업로드버튼 비활성화 + 미리보기 띄우기
-				$('#imgFile' + (i + 1)).prop("disabled", true);
-				$('#img' + (i + 1)).attr("src", arr[i]);
-				$('#img' + (i + 1)).removeClass("d-none");
-				// 다음 업로드 div 보여주기
-				$('#img' + (i + 2) + '-box').removeClass('d-none');
+		///////////////////////// document 준비된 후 호출되는 함수들
+		// price input 넣기
+		$('#price').val(${post.price} / 1000); 
+		// 기존 업로드 파일 처리
+		var arr = [,,,,];
+		arr[0] = "${post.imgPath1}"; // NULL이면 ""로 저장
+		arr[1] = "${post.imgPath2}";
+		arr[2] = "${post.imgPath3}";
+		arr[3] = "${post.imgPath4}";
+		arr[4] = "${post.imgPath5}";
+		for (let i = 0; i < 5; i++) {
+			if (arr[i] == "") {
+				break;
 			}
-		///////////////////////// dom 로드 이후 실행되는 함수 끝
+			// 이미 파일 존재하는 업로드버튼 비활성화 + 미리보기 띄우기
+			$('#imgFile' + (i + 1)).prop("disabled", true);
+			$('#img' + (i + 1)).attr("src", arr[i]);
+			$('#img' + (i + 1)).removeClass("d-none");
+			// 다음 업로드 div 보여주기
+			$('#img' + (i + 2) + '-box').removeClass('d-none');
+		}
+		////////////////////////////// dom 로드 이후 실행되는 함수 끝
 		
 		// 이미지파일 input change 이벤트
 		$('.img-input').on('change', function(e) {
@@ -158,5 +158,102 @@
 			let priceDisplay = koPrice + ",000원";
 			$('#priceDisplay').text(priceDisplay);
 		}); // 가격input change이벤트 끝		
+		
+		
+		
+		/////// 글 수정 이벤트
+		$('#updateBtn').on('click', function() {
+			//alert("submit");
+			
+			// validation check
+			let subject = $('#subject').val().trim();
+			if (!subject) {
+				alert("제목을 입력하세요.");
+				$('#subject').focus();
+				return;
+			}
+			
+			let content = $('#content').val();
+			if (!content) {
+				alert("내용을 입력하세요.");
+				$('#content').focus();
+				return;
+			}
+			
+			// 이미지 파일 유효성 검사(+ 확장자명 검사)
+			for (let i = 2; i <= 5; i++) {
+				let fileId = "#imgFile" + i;
+				let fileName = $(fileId).val();
+				
+				// file == null이면 반복문탈출(어차피 이 뒤로도 전부 NULL일테니)
+				if (!fileName) {
+					break;
+				}
+				
+				// 파일 확장자명 검사
+				let extension = fileName.split(".").pop().toLowerCase();
+				if ($.inArray(extension, ['jpg', 'png', 'gif', 'jpeg']) == -1) {
+					alert(i + "번 파일 업로드 실패 : 이미지 파일만 업로드 할 수 있습니다.");
+					$(fileId).focus();
+					return;
+				}
+			}
+			
+			// 변수화 : postId, price, negotiable -> 유효성체크 + 변수화
+			// postId
+			let postId = ${post.id};
+			
+			// price
+			let price = $('#price').val();
+			if (!price) {
+				alert("가격을 입력하세요.");
+				$('#price').focus();
+				return;
+			}
+			price = (price * 1000);
+			
+			// negotiable
+			let negotiable = 0;
+			if ($('#negotiable').is(':checked')) {
+				// 체크 되었으면 1
+				negotiable = 1;
+			}
+
+			
+			// ajax - INSERT
+			// params : (변수화O) subject, content, price, negotiable / (변수화X) imgFile1~5 
+			let formData = new FormData();
+			formData.append("postId", postId);
+			formData.append("subject", subject);
+			formData.append("content", content);
+			formData.append("price", price);
+			formData.append("negotiable", negotiable);
+			formData.append("imgFile2", $('#imgFile2')[0].files[0]);
+			formData.append("imgFile3", $('#imgFile3')[0].files[0]);
+			formData.append("imgFile4", $('#imgFile4')[0].files[0]);
+			formData.append("imgFile5", $('#imgFile5')[0].files[0]);
+			
+			$.ajax({
+				type:"POST"
+				, url:"/post/update"
+				, data:formData
+				, enctype:"multipart/form-data"
+				, processData:false
+				, contentType:false
+				
+				, success:function(data) {
+					if (data.code == 200) {
+						// 성공
+						alert("게시글 수정을 완료했습니다.");
+						location.href="/article/detail-view?postId=" + data.postId;
+					} else {
+						alert("게시글 생성 실패 : " + data.error_message);
+					}
+				}
+				, error:function(request, status, error) {
+					alert("게시글 생성에 실패했습니다. 관리자에게 문의해주세요.");
+				}
+			}); // ajax 끝		
+		}); // 수정 이벤트 끝
 	}); // 레디이벤트
 </script>
