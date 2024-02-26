@@ -1,10 +1,13 @@
 package com.honeyapple;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,7 +37,7 @@ public class LambdaTest {
 		log.info(list.toString()); // [APPLE, BANANA, CHERRY]
 	}
 	
-	@Test
+	//@Test
 	void 메소드레퍼런스() {
 		List<String> fruits = List.of("apple", "banana", "cherry");
 		fruits = fruits
@@ -45,5 +48,39 @@ public class LambdaTest {
 		// 여기까지 하면 람다식2 와 동일한 방식
 		
 		log.info(fruits.toString());
+	}
+	
+	
+	// 람다) 응용하기
+	// 테스트 메소드
+	@Test
+	void 람다_메소드레퍼런스() {
+		List<Person> personList = new ArrayList<>();
+		personList.add(new Person("서동옥", 31)); // 기본생성자는 없으므로 값 채운 생성자로 세팅한다.
+		personList.add(new Person("홍길동", 20));
+		
+		// 객체 안에 있는 메소드 호출
+		personList.forEach(p -> p.printInfo()); // 람다) List를 돌것임. 꺼낸객체 이름은 p. 그 p의 메소드 작동할것임.
+		personList.forEach(Person::printInfo); // 메소드 레퍼런스(객체가 안보이지만 위와 동일한 결과)
+		// 굳이 꺼낸애를 이름지을 필요 없으니까?
+		
+		// 객체를 println으로 출력
+		personList.forEach(p -> System.out.println(p)); // 람다 (아예 다른 메소드도 부를 수 있음.)
+		personList.forEach(System.out::println); // 메소드 레퍼런스. () 필요없이 "메소드명"만 가져오면 된다. 
+		
+		// 왜 이걸 하는가?
+		// ★ => enum에서 이걸 사용하는 경우가 있다.
+	}
+	
+	@ToString // this라고 해도 자동으로 내부 내용물 보여줌
+	@AllArgsConstructor // 값 채워넣는 생성자 자동생성
+	class Person {
+		// 실험용 클래스
+		private String name;
+		private int age;
+		
+		public void printInfo() {
+			log.info("### " + this); // this: 이 클래스 자체를 뜻함.
+		}
 	}
 }

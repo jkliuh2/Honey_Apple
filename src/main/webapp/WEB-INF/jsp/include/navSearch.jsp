@@ -5,7 +5,7 @@
 	<div class="input-group mb-3 col-4">
 		<%-- 검색 input --%>
 		<input id="search-input" type="text" class="form-control"
-			placeholder="물품이나 동네를 검색하세요.">
+			placeholder="물품을 검색하세요.">
 		<%-- 검색 button --%>
 		<div class="input-group-append">
 			<button class="btn btn-outline-secondary" type="button"

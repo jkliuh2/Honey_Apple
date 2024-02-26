@@ -39,6 +39,10 @@
 			</a>
 		</c:forEach>
 		<%-- 반복문 끝 --%>
-
+	</div>
+	
+	<%-- 더보기 링크 --%>
+	<div class="d-flex justify-content-center mt-3">
+		<a href="/honey-apple/search-view"><h4>더 살펴보기 --></h4></a>
 	</div>
 </div>
