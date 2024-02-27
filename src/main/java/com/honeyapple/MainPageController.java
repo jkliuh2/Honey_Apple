@@ -59,4 +59,11 @@ public class MainPageController {
 		model.addAttribute("titleName", "테스트");
 		return "template/layout";
 	}
+	// 테스트용 페이지
+	@GetMapping("/test2")
+	public String test2(Model model) {
+		model.addAttribute("viewName", "test/mapShowTest");
+		model.addAttribute("titleName", "테스트2");
+		return "template/layout";
+	}
 }
