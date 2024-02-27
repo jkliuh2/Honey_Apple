@@ -88,8 +88,7 @@
 		<div>거래 방식 : <span class="font-weight-bold">${article.post.tradeMethod}</span></div>
 		
 		<%-- 지도영역 --%>
-		<c:if test="${article.post.tradeMethod eq '직거래'}">
-		<div class="mt-3">
+		<div id="map-div" class="mt-3">
 			<div class="map_wrap">
 			    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
 			    <div class="hAddr">
@@ -98,7 +97,6 @@
 			    </div>
 			</div>
 		</div>		
-		</c:if>
 	</div>
 	
 	<%-- 버튼 공간 --%>
@@ -176,12 +174,17 @@
 <%-- services와 clusterer, drawing 라이브러리 불러오기 --%>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d00ddf1f01fe8fc317f5d28329baaf75&libraries=services,clusterer,drawing"></script>
 <script>
-
 var mapContainer = document.getElementById('map'); // 지도를 표시할 div 
 
 // 지도 중심좌표
-var lat = ${not empty article.post.latitude ? article.post.latitude : 37.566826},
-	lng = ${not empty article.post.longitude ? article.post.longitude : 126.9786567};
+var lat = ${not empty article.post.latitude ? article.post.latitude : 1},
+	lng = ${not empty article.post.longitude ? article.post.longitude : 1};
+
+if (lat == 1 || lng == 1) {
+	$('#map-div').addClass("d-none");
+	lat = 37.566826;
+	lng = 126.9786567;
+}
 	
 var	tradeLocation = new kakao.maps.LatLng(lat, lng),
 	mapOption = {
