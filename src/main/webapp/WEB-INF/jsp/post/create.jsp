@@ -50,8 +50,49 @@
 			</div>
 		</div>
 		
-		<%-- 거래 희망 장소 --%>
-		<div class="my-5">
+		<%-- 거래 방식 --%>
+		<div class="my-3">
+			거래 방식 : 
+			<label class="ml-2">
+		 		<input type="radio" name="tradeMethod" value="택배" checked>
+		 		택배
+		 	</label>
+		 	<label class="ml-2">
+		 		<input type="radio" name="tradeMethod" value="직거래">
+		 		직거래
+		 	</label>
+		</div>
+		
+		<%-- 지도(직거래 선택시) --%>
+		<div id="map-div" class="mt-3">
+			<%-- 주소 검색기 --%>
+			<div class="m-3 d-flex">
+				<input class="col-4 form-control" type="text" id="search" placeholder="키워드를 입력하세요.">
+				<button type="button" id="searchBtn" class="btn btn-info col-1 form-control">검색</button>
+			</div>
+			
+			<%-- 지도 --%>
+			<div class="map_wrap">
+			    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+			    <div class="hAddr">
+			        <span class="title">지도중심기준 행정동 주소정보</span>
+			        <span id="centerAddr"></span>
+			    </div>
+			</div>
+			
+			<%-- 마커의 정보 --%>
+			<div class="mt-3">
+				<div>
+					<input type="text" id="load-address-name" placeholder="도로명주소(존재하지 않을 수도 있습니다.)" class="address-input form-control w-50 d-none" readonly>
+				</div>
+				<div>
+					<input type="text" id="address-name" placeholder="지번 주소" class="address-input form-control w-50 d-none" readonly>
+				</div>
+				<div>
+					<input type="text" id="lat" name="latitude" placeholder="위도값" class="form-control d-none" readonly>
+					<input type="text" id="lng" name="longitude" placeholder="경도값" class="form-control d-none" readonly>
+				</div>
+			</div>
 		</div>
 		
 		<%-- 작성완료 버튼 --%>
@@ -64,6 +105,25 @@
 <script>
 	$(document).ready(function() {
 		
+		// 거래방식 radio change 이벤트
+		$('input[name=tradeMethod]').on('change', function() {
+			let tradeMethod = $(this).val();
+			// 직거래 -> 지도 띄우기. 택배 -> 지도 없애기
+			if (tradeMethod == '택배') {
+				$('.address-input').addClass("d-none");
+			} else {
+				$('.address-input').removeClass("d-none");
+			}
+		}); // radio이벤트 끝
+		
+		// 주소검색 이벤트 -> 지도를 검색위치로 변경한다.
+		$('#searchBtn').on('click', function() {
+			//alert("검색");
+			let keyword = $('#search').val(); // 검색내용.
+			
+			// 키워드 검색
+			ps.keywordSearch(keyword, placesSearchCB); // 검색
+		}); // 검색버튼 이벤트끝
 		
 		// 이미지파일 input change 이벤트
 		$('.img-input').on('change', function(e) {
@@ -178,7 +238,20 @@
 				// 체크 되었으면 1
 				negotiable = 1;
 			}
-
+			
+			// 거래방식 및 위도-경도
+			let tradeMethod = $('input[name=tradeMethod]:checked').val();
+			let latitude = $('#lat').val();
+			let longitude = $('#lng').val();
+			if (tradeMethod == '택배') {
+				latitude = "";
+				longitude = "";
+			} else if (!latitude || !longitude) {
+				// 직거래 -> 위-경도 미선택시 유효성체크
+				alert("지도를 클릭하면 거래위치를 설정할 수 있습니다.");
+				return false;
+			}
+			
 			
 			// ajax - INSERT
 			// params : (변수화O) subject, content, price, negotiable / (변수화X) imgFile1~5 
@@ -192,6 +265,9 @@
 			formData.append("imgFile3", $('#imgFile3')[0].files[0]);
 			formData.append("imgFile4", $('#imgFile4')[0].files[0]);
 			formData.append("imgFile5", $('#imgFile5')[0].files[0]);
+			formData.append("tradeMethod", tradeMethod);
+			formData.append("latitude", latitude);
+			formData.append("longitude", longitude);
 			
 			$.ajax({
 				type:"POST"
@@ -216,4 +292,110 @@
 			
 		}); // submit 이벤트 끝
 	}); // 레디이벤트 끝
+</script>
+
+<%-- services와 clusterer, drawing 라이브러리 불러오기 --%>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d00ddf1f01fe8fc317f5d28329baaf75&libraries=services,clusterer,drawing"></script>
+
+<script>
+//지도
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    mapOption = {
+        center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };  
+
+// 지도를 생성합니다    
+var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+// 장소 검색 객체를 생성합니다
+var ps = new kakao.maps.services.Places(); 
+
+//주소-좌표 변환 객체를 생성합니다
+var geocoder = new kakao.maps.services.Geocoder();
+
+var marker = new kakao.maps.Marker(), // 클릭한 위치를 표시할 마커입니다
+infowindow = new kakao.maps.InfoWindow({zindex:1}); // 클릭한 위치에 대한 주소를 표시할 인포윈도우입니다
+
+//현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
+searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+
+//키워드 검색 완료 시 호출되는 콜백함수 입니다
+function placesSearchCB (data, status, pagination) {
+    if (status === kakao.maps.services.Status.OK) {
+
+        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+        // LatLngBounds 객체에 좌표를 추가합니다
+        var bounds = new kakao.maps.LatLngBounds();
+
+        for (var i=0; i<data.length; i++) {
+            bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+        }       
+
+        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+        map.setBounds(bounds);
+    } 
+}
+
+
+//지도를 클릭했을 때 클릭 위치 좌표에 대한 주소정보를 표시하도록 이벤트를 등록합니다
+kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+    searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
+            detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
+            
+            var content = '<div class="bAddr">' +
+                            '<span class="title">법정동 주소정보</span>' + 
+                            detailAddr + 
+                        '</div>';
+
+            // 마커를 클릭한 위치에 표시합니다 
+            marker.setPosition(mouseEvent.latLng);
+            marker.setMap(map);
+
+            // 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
+            infowindow.setContent(content);
+            infowindow.open(map, marker);
+            
+            // 외부 input에 도로명주소+지번주소 표시
+            document.getElementById('load-address-name').value = !!result[0].road_address ? result[0].road_address.address_name : '';
+            document.getElementById('address-name').value = result[0].address.address_name;
+            
+            // 외부 input에 클릭한 지점의 위도,경도 넣기
+            document.getElementById('lat').value = mouseEvent.latLng.getLat(); // 위도
+            document.getElementById('lng').value = mouseEvent.latLng.getLng(); // 경도
+        }   
+    });
+});
+
+//중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
+kakao.maps.event.addListener(map, 'idle', function() {
+    searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+});
+
+function searchAddrFromCoords(coords, callback) {
+    // 좌표로 행정동 주소 정보를 요청합니다
+    geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);         
+}
+
+function searchDetailAddrFromCoords(coords, callback) {
+    // 좌표로 법정동 상세 주소 정보를 요청합니다
+    geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+}
+
+// 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
+function displayCenterInfo(result, status) {
+    if (status === kakao.maps.services.Status.OK) {
+        var infoDiv = document.getElementById('centerAddr');
+
+        for(var i = 0; i < result.length; i++) {
+            // 행정동의 region_type 값은 'H' 이므로
+            if (result[i].region_type === 'H') {
+                infoDiv.innerHTML = result[i].address_name;
+                break;
+            }
+        }
+    }    
+}
 </script>

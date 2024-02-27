@@ -19,11 +19,6 @@ class PostBOTest {
 	}
 	
 	
-	@Transactional
-	//@Test
-	void 글생성테스트() {
-		postBO.addPost(1, "ssd", "테스트제목", "테스트내용", 10000, 1, null, null, null, null, null);
-	}
 	
 	
 	@Transactional

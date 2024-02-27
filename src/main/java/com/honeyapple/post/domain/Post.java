@@ -14,12 +14,19 @@ public class Post {
 	private int	price;
 	private int	negotiable; // 0or1
 	private String content;
+	
 	private String imgPath1;
 	private String imgPath2;
 	private String imgPath3;
 	private String imgPath4;
 	private String imgPath5;
+	
 	private String status;   // 판매중 / 예약중 / 판매완료
+	
+	private String tradeMethod; // 택배 / 직거래
+	private Double latitude; // 위도(y)
+	private Double longitude; // 경도(x)
+	
 	private Date createdAt;
 	private Date updatedAt;
 }

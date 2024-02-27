@@ -48,6 +48,9 @@ public class PostRestController {
 			@RequestParam(name = "imgFile3", required = false) MultipartFile imgFile3,
 			@RequestParam(name = "imgFile4", required = false) MultipartFile imgFile4,
 			@RequestParam(name = "imgFile5", required = false) MultipartFile imgFile5,
+			@RequestParam("tradeMethod") String tradeMethod, // 거래 방식(택배/직거래)
+			@RequestParam(name = "latitude", required = false) Double latitude, // 위도
+			@RequestParam(name = "longitude", required = false) Double longitude, // 경도
 			HttpSession session
 			) {
 		// request params : (변수화O) subject, content, price, negotiable / (변수화X) imgFile1~5
@@ -58,7 +61,7 @@ public class PostRestController {
 		
 		// DB insert
 		int postId = postBO.addPost(userId, userLoginId, subject, content, price, negotiable,
-				imgFile1, imgFile2, imgFile3, imgFile4, imgFile5);
+				imgFile1, imgFile2, imgFile3, imgFile4, imgFile5, tradeMethod, latitude, longitude);
 		
 		// 응답값
 		Map<String, Object> result = new HashMap<>();
