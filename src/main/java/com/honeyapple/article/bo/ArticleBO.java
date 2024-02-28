@@ -40,7 +40,24 @@ public class ArticleBO {
 		
 		// 주소 3개를 조합해서 8자의 String으로 만든다.
 		String hometown = "";
+		if (sido == null || juso == false) {
+			hometown = null;
+		} else {
+			hometown += sido;
+			if (sigugun != null) {
+				hometown += sigugun;
+				if (dong != null) {
+					hometown += dong;
+				}
+			}
+		}
 		
+		// 동네정보와 일치하는 유저의 userId select // null로 input하면 null이 온다.
+//		List<UserEntity> userList = userBO.getUserEntityByHometownStartingWith(hometown);
+		
+		// keyword, userList에 만족하는 PostList 가져오기
+		
+		// PostList로 ArticleList 만들기(필요 정보:post, user(seller), 관심Count)
 		
 		return null;
 	}
