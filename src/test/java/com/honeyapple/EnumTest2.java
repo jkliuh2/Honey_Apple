@@ -8,21 +8,44 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import lombok.Getter;
+
 public class EnumTest2 {
+	
+	@Getter // ()안의 title값을 꺼내기 위한 getter
+	enum PayMethod { // 아래의 List 내부의 내용들이 타입이 된다고 보면 된다. -> 이걸 PayType에 넣을 것이다.
+		// 열거형 정의
+		REMITTANCE("무통장입금") // () 없어도 되긴 하지만, 설명을 ""로 넣어주면 알아보기 편하다. 
+		, ACCOUNT_TRANSFER("계좌이체")
+		, CREDIT("신용카드")
+		, NAVER("네이버페이");
+		
+		// 필드
+		private String title; // () 안의 내용을 뜻한다.
+		
+		// 생성자
+		PayMethod(String title) {
+			this.title = title;
+		}
+	}
 
 	enum PayType {
 		// 열거형 정의 (현금, 카드, 없음)
-		CASH("현금", List.of("REMITTANCE", "ACCOUNT_TRANSFER"))
-		, CARD("카드", List.of("CREDIT", "NAVER"))
-		, EMPTY("없음", Collections.emptyList()); // 실무에서 쓰는 "빈 리스트". Collections.EMPTY_LIST
+//		CASH("현금", List.of("REMITTANCE", "ACCOUNT_TRANSFER"))    // 변경 전 내용들
+//		, CARD("카드", List.of("CREDIT", "NAVER"))
+//		, EMPTY("없음", Collections.emptyList()); // 실무에서 쓰는 "빈 리스트". Collections.EMPTY_LIST
 		// 1번째:String, 2번째:List
+		
+		CASH("현금", List.of(PayMethod.REMITTANCE, PayMethod.ACCOUNT_TRANSFER))
+		, CARD("카드", List.of(PayMethod.CREDIT, PayMethod.NAVER))
+		, EMPTY("없음", Collections.emptyList()); // 실무에서 쓰는 "빈 리스트". Collections.EMPTY_LIST
 		
 		// 필드
 		private String title;
-		private List<String> payList;
+		private List<PayMethod> payList;
 		
 		// 생성자
-		PayType(String title, List<String> payList) {
+		PayType(String title, List<PayMethod> payList) {
 			this.title = title;
 			this.payList = payList;
 		}
@@ -30,7 +53,7 @@ public class EnumTest2 {
 		///////////// 메소드
 		// 결제 수단(List 안의 값) String이 enum에 존재하는지 확인
 		// (이 메소드를 밖에서 안쓸것이라면 private으로 해도 된다.)
-		public boolean hasPayMethod(String payMethod) {
+		public boolean hasPayMethod(PayMethod payMethod) {
 			return payList.stream() // payList를 순회.
 					.anyMatch(pay -> pay.equals(payMethod)); // List의 요소 pay들 중 하나라도 같으면 True
 			// List를 순회하면서 parameter와 비교해서 하나라도 일치하면 T를 리턴한다.
@@ -39,7 +62,7 @@ public class EnumTest2 {
 		
 		// 결제 수단으로 enum 타입 찾기
 		// 자식값(리스트 안의 값들)을 받았을 때 부모(CASH, CARD를 리턴하는 메소드)
-		public static PayType findByPayMethod(String payMethod) {
+		public static PayType findByPayMethod(PayMethod payMethod) {
 			// static: 생성자 안만들고 하는 메소드
 			// PayType: 리턴값이 부모타입
 			
@@ -52,16 +75,32 @@ public class EnumTest2 {
 		}
 	}
 	
+//	@Test
+//	void pay테스트() {
+//		// given 준비
+//		String payMethod = "NAVER";
+//		
+//		// when 실행
+//		// 결제수단에 해당하는 결제 종류는?
+//		PayType payType = PayType.findByPayMethod(payMethod);
+//		
+//		// then 확인
+//		assertEquals(payType, PayType.CARD); // T여야 함
+//	}
+	
 	@Test
-	void pay테스트() {
-		// given 준비
-		String payMethod = "NAVER";
+	void pay테스트2() {
+		// given
+		PayMethod payMethod = PayMethod.ACCOUNT_TRANSFER;
 		
-		// when 실행
-		// 결제수단에 해당하는 결제 종류는?
+		// when
+		// payMethod라는 결제방법을 가지는 PayType은 무엇인가? -> 결과는 payType에 저장.
 		PayType payType = PayType.findByPayMethod(payMethod);
 		
-		// then 확인
-		assertEquals(payType, PayType.CARD); // T여야 함
+		// then
+		assertEquals(payType, PayType.CASH); // CASH면 정답. 그외는 오답
+		
+		// payMethod에 들어가있는 title값(한글) 꺼내기
+		assertEquals("계좌이체", payMethod.getTitle()); // 정답
 	}
 }

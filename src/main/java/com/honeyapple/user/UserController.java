@@ -110,4 +110,20 @@ public class UserController {
 		model.addAttribute("titleName", "정보수정");
 		return "template/layout";
 	}
+	
+	
+	// 유저 동네설정 페이지
+	@GetMapping("/set-hometown-view")
+	public String setHometownView(HttpSession session, Model model) {
+		
+		// 로그인 정보
+		int userId = (int)session.getAttribute("userId");
+		
+		// DB - 유저 정보 가져오기
+		UserEntity user = userBO.getUserEntityById(userId);
+		
+		model.addAttribute("viewName", "user/serHometown");
+		model.addAttribute("titleName", "우리 동네 설정하기");
+		return "template/layout";
+	}
 }

@@ -5,38 +5,140 @@
 
 <div class="medium-size-div">
 	<hr>
-	<div class="d-flex justify-content-center my-5">
-		<h1>달달한 인기매물</h1>
+	
+	<%-- 검색 창 및 옵션들 --%>
+	<div class="mt-3">
+		<%-- 유저 동네 옵션 --%>
+		<div class="mt-3 d-flex">
+			<div class="col-2 d-flex align-items-center">
+				<label>
+					<span class="font-weight-bold">주소 검색</span>
+					<input type="checkbox" id="juso" class="ml-2">
+				</label>
+			</div>
+			<select id="sido" class="juso-select form-control" disabled>
+				<option value="">시도 선택</option>
+			</select>
+			<select id="sigugun" class="juso-select form-control" disabled>
+      			<option value="">시군구 선택</option>
+    		</select>
+    		<select id="dong" class="juso-select form-control" disabled>
+      			<option value="">읍면동 선택</option>
+    		</select>
+		</div>
+		
+		<%-- 검색창 --%>
+		<div class="input-group mt-3">
+			<input type="text" id="keyword" class="form-control" placeholder="물품명을 검색하세요.">
+  			<div class="input-group-append">
+    			<button class="btn btn-info" type="button" id="searchBtn">검색하기</button>
+  			</div>
+		</div>
 	</div>
 
-	<%-- 게시물들 --%>
-	<div class="d-flex flex-wrap justify-content-between">
-		<%-- 게시물 Card (반복문) --%>
-		<c:forEach items="${articleList}" var="article">
-			<a href="/article/detail-view?postId=${article.post.id}" class="card card-size m-3"> <%-- 이미지 --%> 
-				<img src="${article.post.imgPath1}" class="card-img-top" alt="중고거래 이미지">
-				<div class="card-body text-dark">
-					<%-- 글 제목 --%>
-					<h5 class="card-title">${article.post.subject}</h5>
-					<%-- 가격 --%>
-					<div class="font-weight-bold">
-						<fmt:formatNumber value="${article.post.price}" />원
-					</div>
-					<%-- 판매자 위치정보 --%>
-					<div>
-						<small>${article.user.hometown} / 동네 미설정</small>
-					</div>
-					<%-- 관심 수 --%>
-					<div>
-						<small>관심 ${article.interestCount}</small>
-					</div>
-					<%-- 업데이트 시간 --%>
-					<div>
-						<small>1시간 전 / 아직 미설정</small>
-					</div>
-				</div>
-			</a>
-		</c:forEach>
-		<%-- 반복문 끝 --%>
-	</div> <%-- 게시물 끝 --%>
+	<hr>
+	
+	<%-- 게시물 들어가는 div --%>
+	<div id="contents" class="mt-3">
+		<jsp:include page="../article/articleList.jsp" />
+	</div>
 </div>
+
+<%-- 주소 select관련 js. 
+출처 : https://zelkun.tistory.com/entry/002-jQuery-%EC%85%80%EB%A0%89%ED%8A%B8%EB%B0%95%EC%8A%A4-%EC%A0%9C%EC%96%B4-%EC%98%88%EC%A0%9C-select-box-control-example --%>
+<script type="text/javascript" src="/static/js/hangjungdong.js"></script>
+<script>
+$(document).ready(function() {
+	
+	// 검색 버튼 클릭이벤트
+	$('#searchBtn').on('click', function() {
+		let keyword = $('#keyword').val().trim();
+		let sido = $('#sido').val();
+		let sigugun = $('#sigugun').val();
+		let dong = $('#dong').val();
+		let juso = $('#juso').is(':checked'); // T/F
+		
+		// ajax - 검색 -> 게시물들 바꾸기
+		$.ajax({
+			type:"POST"
+			, url:"/search"
+			, data:{"keyword":keyword, "sido":sido, "sigugun":sigugun, "dong":dong, "juso":juso}
+		
+			, success:function(data) {
+				$('#contents').html(data); // 아래 내용 바꾸기
+			}
+			, error:function(request, status, error) {
+				alert("오류가 발생했습니다. 관리자에게 문의해주세요.");
+			}
+		}); // ajax 끝
+		
+	}); // 검색버튼 이벤트 끝
+
+	// 주소 체크박스 선택
+	$('#juso').on('change', function() {
+		// 주소 select 활성화 토글
+		if ($(this).is(':checked')) {
+			// 체크on
+			$('.juso-select').prop('disabled', false);
+		} else {
+			// 체크off
+			$('.juso-select').prop('disabled', true);
+		}
+	});// 체크박스 change이벤트끝
+	
+///////////////////////////////////////////// 주소 관련 내용들
+	// 시/도 option 넣기
+	$.each(hangjungdong.sido, function(index, value) {
+		$('#sido').append(add_option(value.sido, value.codeNm));
+	});// 시/도 option넣기 끝
+	
+	// 시/도 option change 이벤트
+	$('#sido').on('change', function() {
+		$('#sigugun').show(); // 세종특별시 예외처리 취소
+		// 시군구 비우기
+		$('#sigugun').empty(); 
+		$('#sigugun').append(add_option("", '시군구 선택')); 
+		// 읍면동 비우기
+		$('#dong').empty();
+		$('#dong').append(add_option("", '읍면동 선택'));
+		
+		let sidoCode = $(this).val(); // 시/도 code
+		
+		// 시군구 option 넣기
+		$.each(hangjungdong.sigugun, function(index, value) {
+			if (value.sido == sidoCode) {
+				$('#sigugun').append(add_option(value.sigugun, value.codeNm));
+			}
+			
+			// 세종 특별시 예외처리
+			if (sidoCode == 36) {
+				$('#sigugun').hide(); // 시군구 숨기기
+				// sigugun select에서 자동으로 가장 위의 옵션 선택처리
+				$('#sigugun option:eq(1)').attr('selected', true); 
+				$('#sigugun').trigger('change');// 시군구 change이벤트 발생처리
+			}
+		}); // 시군구 option넣기 끝
+	});// 시/도 change이벤트끝
+	
+	// 시군구 change이벤트
+	$('#sigugun').on('change', function() {
+		$('#dong').empty();
+		$('#dong').append(add_option("", '읍면동 선택'));
+		
+		let sidoCode = $('#sido').val();
+		let sigugunCode = $('#sigugun').val();
+		// 읍면동 넣기
+		$.each(hangjungdong.dong, function(index, value) {
+			if (value.sido == sidoCode && value.sigugun == sigugunCode) {
+				$('#dong').append(add_option(value.dong, value.codeNm));
+			}
+		});// 읍면동 넣기 끝
+	}); // 시군구 change이벤트끝
+////////////////////////////////////////////////////////////////// 주소 관련 끝
+}); // ready끝
+
+//옵션 추가하는 함수
+function add_option(code, name){
+    return '<option value="' + code +'">' + name +'</option>';
+}
+</script>

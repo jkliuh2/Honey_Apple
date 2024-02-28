@@ -25,7 +25,7 @@
 	
 	<%-- 리스트 나오는 곳 --%>
 	<div id="contents">
-		<jsp:include page="articleList.jsp" />
+		<jsp:include page="../article/articleList.jsp" />
 	</div> <%-- id=contents 끝 --%>
 </div>
 

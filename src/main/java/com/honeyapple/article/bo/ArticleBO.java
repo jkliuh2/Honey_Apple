@@ -34,6 +34,18 @@ public class ArticleBO {
 	
 /////////////////////////////////////////////// 
 	
+	// 검색 메소드 // 유저 동네정보 설정하고 바꿀것임.
+	public List<Article> searchArticle(String keyword, 
+			Integer sido, Integer sigugun, Integer dong, boolean juso) {
+		
+		// 주소 3개를 조합해서 8자의 String으로 만든다.
+		String hometown = "";
+		
+		
+		return null;
+	}
+	
+	
 	// select - Article
 	// input: userId(로그인유저, Null 가능), postId / output:Article
 	public Article getArticleByPostIdUserId(int postId, Integer userId) {

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.honeyapple.article.bo.ArticleBO;
 import com.honeyapple.article.domain.Article;
@@ -47,9 +49,27 @@ public class MainPageController {
 		// 응답값
 		model.addAttribute("viewName", "mainpage/searchView");
 		model.addAttribute("titleName", "검색");
-		model.addAttribute("nav", "검색");
 		model.addAttribute("articleList", articleList);
 		return "template/layout";
+	}
+	
+	
+	// 검색 페이지 검색 API -> 리턴 jsp
+	@PostMapping("/search")
+	public String search(
+			@RequestParam(name = "keyword", required = false) String keyword,
+			@RequestParam(name = "sido", required = false) Integer sido,
+			@RequestParam(name = "sigugun", required = false) Integer sigugun,
+			@RequestParam(name = "dong", required = false) Integer dong,
+			@RequestParam("juso") boolean juso,
+			Model model) {
+		
+		// DB - 검색결과 List<Article>
+		List<Article> articleList = articleBO.searchArticle(keyword, sido, sigugun, dong, juso);
+		
+		// Model에 List담고 리턴
+		model.addAttribute("articleList", articleList);
+		return "article/articleList";
 	}
 	
 	// 테스트용 페이지

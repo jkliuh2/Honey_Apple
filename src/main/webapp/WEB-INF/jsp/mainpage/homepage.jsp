@@ -11,7 +11,6 @@
 
 	<%-- 게시물들 --%>
 	<div class="d-flex flex-wrap justify-content-between">
-
 		<%-- 게시물 Card (반복문) --%>
 		<c:forEach items="${articleList}" var="article">
 			<a href="/article/detail-view?postId=${article.post.id}" class="card card-size m-3"> <%-- 이미지 --%> 

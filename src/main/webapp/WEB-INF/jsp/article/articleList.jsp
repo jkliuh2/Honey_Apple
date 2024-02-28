@@ -32,4 +32,11 @@
 		</a>
 	</c:forEach>
 	<%-- 반복문 끝 --%>
+	
+	<%-- List가 없을 때 뜨는 내용. --%>
+	<c:if test="${empty articleList}">
+		<div class="d-flex justify-content-center mt-3">
+			<h1>꿀템이 없습니다.</h1>
+		</div>
+	</c:if>
 </div>

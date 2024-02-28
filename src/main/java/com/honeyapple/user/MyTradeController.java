@@ -56,6 +56,6 @@ public class MyTradeController {
 		List<Article> articleList = articleBO.getMyTradeArticleListByBuyerId(userId, menu);
 		model.addAttribute("articleList", articleList);
 		
-		return "myTrade/articleList";
+		return "article/articleList";
 	}
 }
