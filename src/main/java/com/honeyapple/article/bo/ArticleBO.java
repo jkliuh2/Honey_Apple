@@ -46,18 +46,24 @@ public class ArticleBO {
 			keyword = null;
 		}
 		
-		// hometown을 검색을 위한 String으로 변환
+		// 주소 input 처리
 		String hometown = null;
 		if (juso) {
 			// 주소검색=true
 			hometown = hometownBO.codeMerge(sido, sigugun, dong);
 		}
 		
-		// 동네정보와 일치하는 유저의 userId select // null로 input하면 null이 온다.
-		List<UserEntity> userList = userBO.getUserEntityByHometownStartingWith(hometown);
-		
-		// keyword, userList에 만족하는 PostList 가져오기
-		List<Post> postList = postBO.getPostListByKewordUserList(keyword, userList, juso);
+		// 주소검색 여부에 따른 postList select
+		List<Post> postList = new ArrayList<>();
+		if (!juso || hometown == null) { // 주소검색X
+			postList = postBO.getPostListByKewordUserList(keyword, null);
+		} else { // juso=true && hometown 코드 존재
+			List<UserEntity> userList = userBO.getUserEntityByHometownStartingWith(hometown);
+			if (!userList.isEmpty()) {
+				// 조건에 맞는 유저가 존재.
+				postList = postBO.getPostListByKewordUserList(keyword, userList);
+			}
+		}
 		
 		// PostList로 ArticleList 만들기(필요 정보:post, user(seller), 관심Count)
 		List<Article> articleList = makeArticleList(postList);
@@ -203,5 +209,6 @@ public class ArticleBO {
 			articleList.add(article);
 		}
 		return articleList;
+		// if) postList가 empty -> articleList도 empty
 	}
 }

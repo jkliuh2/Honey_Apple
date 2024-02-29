@@ -148,16 +148,12 @@
 	OR `content` LIKE CONCAT('%', #{keyword}, '%')
 	)
 	</if>
-	
-	<if test="juso"> <!-- 주소검색O -->
-	</if>
-	<if test="!userList.isEmpty()">
+	<if test="userList != null"> <!-- userList가 null이 아니면 무조건 BO에서 채워서 보냄 -->
 	AND `sellerId` IN
 		<foreach collection="userList" item="user" open="(" separator="," close=")">
 		#{user.id}
 		</foreach>
 	</if>
-	
 	ORDER BY `id` DESC
  	</select>
  	
