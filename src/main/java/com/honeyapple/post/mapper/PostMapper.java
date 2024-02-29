@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.honeyapple.post.domain.Post;
+import com.honeyapple.user.entity.UserEntity;
 
 @Mapper
 public interface PostMapper {
@@ -24,6 +25,11 @@ public interface PostMapper {
 			@Param("sellerId") int sellerId,
 			@Param("status") String status,
 			@Param("exceptStatus") String exceptStatus);
+	
+	// select(keyword + userList) (둘 모두 NULL 가능)
+	public List<Post> selectPostListByKewordAndUserList(
+			@Param("keyword") String keyword, 
+			@Param("userList") List<UserEntity> userList);
 	
 	// update(거래상태 update)
 	public void updatePostByIdStatus(

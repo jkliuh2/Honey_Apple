@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.honeyapple.common.FileManagerService;
 import com.honeyapple.post.domain.Post;
 import com.honeyapple.post.mapper.PostMapper;
+import com.honeyapple.user.entity.UserEntity;
 
 @Service
 public class PostBO {
@@ -86,6 +87,11 @@ public class PostBO {
 	public List<Post> getPostListBySellerIdStatusOrderByIdDesc(int sellerId, String status, String exceptStatus) {
 		return postMapper.selectPostListBySellerIdStatusOrderByIdDesc(sellerId, status, exceptStatus);
 	}
+	// select) keyword + userList로 검색 -> List
+	public List<Post> getPostListByKewordUserList(String keyword, List<UserEntity> userList) {
+		return postMapper.selectPostListByKewordAndUserList(keyword, userList);
+	}
+	
 	
 	// Update - id, status(거래상태)
 	public void updatePostByIdStatus(int postId, String status) {

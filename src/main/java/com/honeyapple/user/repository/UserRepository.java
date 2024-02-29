@@ -12,5 +12,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 	public UserEntity findByNickname(String nickname);
 	public UserEntity findByLoginIdAndPassword(String loginId, String password);
 	
-//	public List<UserEntity> findByNicknameStartingWith(String nickname);
+	public List<UserEntity> findByHometownStartingWith(String hometown);
 }

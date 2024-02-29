@@ -44,9 +44,6 @@
 	</div>
 </div>
 
-<%-- 주소 select관련 js. 
-출처 : https://zelkun.tistory.com/entry/002-jQuery-%EC%85%80%EB%A0%89%ED%8A%B8%EB%B0%95%EC%8A%A4-%EC%A0%9C%EC%96%B4-%EC%98%88%EC%A0%9C-select-box-control-example --%>
-<script type="text/javascript" src="/static/js/hangjungdong.js"></script>
 <script>
 $(document).ready(function() {
 	

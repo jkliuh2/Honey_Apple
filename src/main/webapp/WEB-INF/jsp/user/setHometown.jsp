@@ -16,7 +16,6 @@
 	</div>
 </div>
 
-<script type="text/javascript" src="/static/js/hangjungdong.js"></script>
 <script>
 	$(document).ready(function() {
 		// 시/도 option 넣기

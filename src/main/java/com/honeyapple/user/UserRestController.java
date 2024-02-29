@@ -47,6 +47,9 @@ public class UserRestController {
 			@RequestParam("nickname") String nickname,
 			@RequestParam("password") String password,
 			@RequestParam("email") String email,
+			@RequestParam(name = "sido", required = true) Integer sido,
+			@RequestParam(name = "sigugun", required = true) Integer sigugun,
+			@RequestParam(name = "dong", required = true) Integer dong,
 			HttpSession session
 			) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		
@@ -54,7 +57,8 @@ public class UserRestController {
 		String hashedPassword = EncryptUtils.shaAndHex(password, "SHA-256");
 		
 		// DB insert
-		UserEntity user = userBO.addUser(loginId, nickname, hashedPassword, email);
+		UserEntity user = userBO.addUser(loginId, nickname, hashedPassword, email,
+				sido, sigugun, dong);
 		
 		// 응답값
 		Map<String, Object> result = new HashMap<>();

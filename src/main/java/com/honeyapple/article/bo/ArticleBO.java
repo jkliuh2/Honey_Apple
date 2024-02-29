@@ -13,6 +13,7 @@ import com.honeyapple.interest.bo.InterestBO;
 import com.honeyapple.interest.domain.Interest;
 import com.honeyapple.post.bo.PostBO;
 import com.honeyapple.post.domain.Post;
+import com.honeyapple.user.bo.HometownBO;
 import com.honeyapple.user.bo.UserBO;
 import com.honeyapple.user.entity.UserEntity;
 
@@ -30,6 +31,9 @@ public class ArticleBO {
 	
 	@Autowired
 	private InterestBO interestBO;
+	
+	@Autowired
+	private HometownBO hometownBO;
 
 	
 /////////////////////////////////////////////// 
@@ -37,29 +41,28 @@ public class ArticleBO {
 	// 검색 메소드 // 유저 동네정보 설정하고 바꿀것임.
 	public List<Article> searchArticle(String keyword, 
 			Integer sido, Integer sigugun, Integer dong, boolean juso) {
+		// keyword null처리
+		if (keyword.equals("")) {
+			keyword = null;
+		}
 		
-		// 주소 3개를 조합해서 8자의 String으로 만든다.
-		String hometown = "";
-		if (sido == null || juso == false) {
-			hometown = null;
-		} else {
-			hometown += sido;
-			if (sigugun != null) {
-				hometown += sigugun;
-				if (dong != null) {
-					hometown += dong;
-				}
-			}
+		// hometown을 검색을 위한 String으로 변환
+		String hometown = null;
+		if (juso) {
+			// 주소검색=true
+			hometown = hometownBO.codeMerge(sido, sigugun, dong);
 		}
 		
 		// 동네정보와 일치하는 유저의 userId select // null로 input하면 null이 온다.
-//		List<UserEntity> userList = userBO.getUserEntityByHometownStartingWith(hometown);
+		List<UserEntity> userList = userBO.getUserEntityByHometownStartingWith(hometown);
 		
 		// keyword, userList에 만족하는 PostList 가져오기
+		List<Post> postList = postBO.getPostListByKewordUserList(keyword, userList);
 		
 		// PostList로 ArticleList 만들기(필요 정보:post, user(seller), 관심Count)
+		List<Article> articleList = makeArticleList(postList);
 		
-		return null;
+		return articleList;
 	}
 	
 	
@@ -99,25 +102,9 @@ public class ArticleBO {
 	public List<Article> getArticleList() {
 		// 필요 정보: post, user, 관심Count
 		// post.status == "판매중" 인 것만 가져와야 한다. + id 최신 + limit 6
-		
-		List<Article> articleList = new ArrayList<>();
-		
 		List<Post> postList = postBO.getPostListByStatusOrderByIdDescLimit6("판매중");
-		for (Post post : postList) {
-			Article article = new Article();
-			
-			// post
-			article.setPost(post);
-			
-			// user(판매자)
-			article.setUser(userBO.getUserEntityById(post.getSellerId()));
-			
-			// 관심Count
-			article.setInterestCount(interestBO.getInterestCountByPostId(post.getId()));
-			
-			articleList.add(article);
-		}
 		
+		List<Article> articleList = makeArticleList(postList);
 		return articleList;
 	}
 	
@@ -127,17 +114,11 @@ public class ArticleBO {
 		// 필요정보:post, seller, 관심count
 		UserEntity seller = userBO.getUserEntityById(sellerId);
 		
-		List<Article> articleList = new ArrayList<>();
-		
-		// article 가져오기(status, exceptStatus 둘 중 하나는 null)
+		// sellerId로 postList 가져오기
 		List<Post> postList = postBO.getPostListBySellerIdStatusOrderByIdDesc(sellerId, status, exceptStatus);
-		for (Post post : postList) {
-			Article article = new Article();
-			article.setPost(post);
-			article.setUser(seller);
-			article.setInterestCount(interestBO.getInterestCountByPostId(post.getId()));
-			articleList.add(article);
-		}
+		
+		// postList -> articleList만들기
+		List<Article> articleList = makeArticleList(postList);
 		return articleList;
 	}
 	
@@ -146,8 +127,7 @@ public class ArticleBO {
 	// ★ 나중에 menu도 enum으로 설정해야하듯.
 	public List<Article> getMyTradeArticleListByBuyerId(
 			int buyerId, String menu) {
-		// 최종 리턴할 ArticleList
-		List<Article> articleList = new ArrayList<>();
+
 		// article 하나와 1:1 대응하는 post의 List
 		List<Post> postList = new ArrayList<>(); 
 		
@@ -195,8 +175,16 @@ public class ArticleBO {
 		}
 		
 		
-		
 		// 2. 위에서 설정한 postList로 article 세팅해서 List에 넣기
+		List<Article> articleList = makeArticleList(postList);
+		return articleList;
+	}
+	
+	
+	// postList가 들어오면 그에 해당하는 articleList 리턴하기
+	public List<Article> makeArticleList(List<Post> postList) {
+		// article에 들어가는 정보: post, user(seller), 관심Count
+		List<Article> articleList = new ArrayList<>();
 		for (Post post : postList) {
 			Article article = new Article();
 			
@@ -214,7 +202,6 @@ public class ArticleBO {
 			// List에 넣기
 			articleList.add(article);
 		}
-		
 		return articleList;
 	}
 }

@@ -14,6 +14,9 @@ import com.honeyapple.user.repository.UserRepository;
 
 @Service
 public class UserBO {
+	
+	@Autowired
+	private HometownBO hometownBO;
 
 	@Autowired
 	private UserMapper userMapper;
@@ -45,19 +48,27 @@ public class UserBO {
 	public UserEntity getUserEntityById(int id) {
 		return userRepository.findById(id).orElse(null);
 	}
+	
+	public List<UserEntity> getUserEntityByHometownStartingWith(String hometown) {
+		return userRepository.findByHometownStartingWith(hometown);
+	}
 
 	////////////////////////////////////////////////////////// API 관련 메소드들
 
 	// 회원가입
 	// input: 4개 param / output: UserEntity(가입한 정보 반환)
-	public UserEntity addUser(String loginId, String nickname, String password, String email) {
+	public UserEntity addUser(String loginId, String nickname, String password, String email,
+			Integer sido, Integer sigugun, Integer dong) {
 
-		// 회원 type 설정
+		// 회원 type 설정 (수정예정)
 		String type = "HoneyApple";
+		
+		// 주소 합치기
+		String hometown = hometownBO.codeMerge(sido, sigugun, dong);
 
 		// builder
 		UserEntity userEntity = userRepository.save(UserEntity.builder().loginId(loginId).nickname(nickname)
-				.password(password).email(email).type(type).build());
+				.password(password).email(email).type(type).hometown(hometown).build());
 
 		// insert + return
 		return userEntity == null ? null : userEntity;
