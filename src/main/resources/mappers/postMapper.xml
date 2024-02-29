@@ -144,16 +144,20 @@
 	<if test="keyword != null">
 	AND 
 	( 
-	`subject` LIKE CONCAT(#{keyword}, '%')
-	OR `content` LIKE CONCAT(#{keyword}, '%')
+	`subject` LIKE CONCAT('%', #{keyword}, '%')
+	OR `content` LIKE CONCAT('%', #{keyword}, '%')
 	)
 	</if>
-	<if test="not empty userList">
+	
+	<if test="juso"> <!-- 주소검색O -->
+	</if>
+	<if test="!userList.isEmpty()">
 	AND `sellerId` IN
 		<foreach collection="userList" item="user" open="(" separator="," close=")">
 		#{user.id}
 		</foreach>
 	</if>
+	
 	ORDER BY `id` DESC
  	</select>
  	

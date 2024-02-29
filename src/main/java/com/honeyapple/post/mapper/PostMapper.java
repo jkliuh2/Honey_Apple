@@ -29,7 +29,8 @@ public interface PostMapper {
 	// select(keyword + userList) (둘 모두 NULL 가능)
 	public List<Post> selectPostListByKewordAndUserList(
 			@Param("keyword") String keyword, 
-			@Param("userList") List<UserEntity> userList);
+			@Param("userList") List<UserEntity> userList,
+			@Param("juso") boolean juso);
 	
 	// update(거래상태 update)
 	public void updatePostByIdStatus(

@@ -57,7 +57,7 @@ public class ArticleBO {
 		List<UserEntity> userList = userBO.getUserEntityByHometownStartingWith(hometown);
 		
 		// keyword, userList에 만족하는 PostList 가져오기
-		List<Post> postList = postBO.getPostListByKewordUserList(keyword, userList);
+		List<Post> postList = postBO.getPostListByKewordUserList(keyword, userList, juso);
 		
 		// PostList로 ArticleList 만들기(필요 정보:post, user(seller), 관심Count)
 		List<Article> articleList = makeArticleList(postList);

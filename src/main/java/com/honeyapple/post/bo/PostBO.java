@@ -88,8 +88,8 @@ public class PostBO {
 		return postMapper.selectPostListBySellerIdStatusOrderByIdDesc(sellerId, status, exceptStatus);
 	}
 	// select) keyword + userList로 검색 -> List
-	public List<Post> getPostListByKewordUserList(String keyword, List<UserEntity> userList) {
-		return postMapper.selectPostListByKewordAndUserList(keyword, userList);
+	public List<Post> getPostListByKewordUserList(String keyword, List<UserEntity> userList, boolean juso) {
+		return postMapper.selectPostListByKewordAndUserList(keyword, userList, juso);
 	}
 	
 	
