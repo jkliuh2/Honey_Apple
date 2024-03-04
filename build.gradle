@@ -35,6 +35,9 @@ dependencies {
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	implementation group: 'org.glassfish.web', name: 'jakarta.servlet.jsp.jstl', version: '2.0.0'
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux' // WebClient 구문
+	//implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // oauth 구문
+	//implementation "io.jsonwebtoken:jjwt:0.9.1" // jwt 구문
 }
 
 tasks.named('test') {

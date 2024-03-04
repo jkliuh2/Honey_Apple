@@ -31,7 +31,7 @@
 			
 			<%-- 카카오 로그인 --%>
 			<div class="mt-3">
-				<button type="button" class="btn btn-warning form-control">카카오 로그인</button>
+				<a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=e69c8cb6c6982e89cceb6b10f29ea504&redirect_uri=http%3A%2F%2Flocalhost%2Foauth" type="button" class="btn btn-warning form-control">카카오 로그인</a>
 			</div>
 			
 			<%-- 구글 로그인 --%>

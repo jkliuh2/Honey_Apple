@@ -23,7 +23,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
 			Object handler) throws IOException {
 		// 컨트롤러 입장 전 검사
 		
-		// 요청 URL Path를 꺼낸다.
+		// 요청 Path를 꺼낸다.
 		String uri = request.getRequestURI();
 		
 		// 로그인 여부를 세션에서 뽑아오기

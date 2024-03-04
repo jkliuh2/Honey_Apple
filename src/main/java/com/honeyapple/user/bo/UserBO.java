@@ -12,6 +12,9 @@ import com.honeyapple.user.entity.UserEntity;
 import com.honeyapple.user.mapper.UserMapper;
 import com.honeyapple.user.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class UserBO {
 	
@@ -54,6 +57,16 @@ public class UserBO {
 	}
 
 	////////////////////////////////////////////////////////// API 관련 메소드들
+	
+	// 카카오 회원가입
+	public UserEntity kakaoUser(String email) {
+		UserEntity user = UserEntity.builder()
+				.email(email)
+				.build();
+		userRepository.save(user);
+		log.info("#### 카카오 회원가입 완료");
+		return user;
+	}
 
 	// 회원가입
 	// input: 4개 param / output: UserEntity(가입한 정보 반환)
