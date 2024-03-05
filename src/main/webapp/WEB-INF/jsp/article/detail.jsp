@@ -5,8 +5,14 @@
 
 <div class="w-50 mt-5">
 	<%-- 이미지(1~5개) --%>
-	<div class="d-flex justify-content-center">
-		<img src="${article.post.imgPath1}" alt="게시물 이미지" width="500">
+	<div class="d-flex justify-content-between">
+		<button type="button" class="arrowBtn d-flex align-items-center border-0" id="leftArrow">
+			<img src="/static/img/left-arrow.webp" alt="왼쪽 화살표" width="40" height="40">
+		</button>
+		<img id="postImg" src="${article.post.imgPath1}" alt="게시물 이미지" width="500" data-path-number="1">
+		<button type="button" class="arrowBtn d-flex align-items-center border-0" id="rightArrow">
+			<img src="/static/img/right-arrow.webp" alt="오른쪽 화살표" width="40" height="40">
+		</button>
 	</div>
 	
 	<%-- 판매자 정보 --%>
@@ -141,6 +147,51 @@
 
 <script>
 	$(document).ready(function() {
+		
+		// 그림 화살표 버튼 이벤트
+		$('.arrowBtn').on('click', function() {
+			//alert("화살표");
+			let direction = $(this).attr("id"); // leftArrow / rightArrow
+			let pathNum = $('#postImg').data("path-number");
+			
+			// null아닌 imgPath들 List에 넣기
+			var imgPathList = ['${article.post.imgPath1}'];
+			if (${not empty article.post.imgPath2}) {
+				imgPathList.push('${article.post.imgPath2}');
+			}
+			if (${not empty article.post.imgPath3}) {
+				imgPathList.push('${article.post.imgPath3}');
+			}
+			if (${not empty article.post.imgPath4}) {
+				imgPathList.push('${article.post.imgPath4}');
+			}
+			if (${not empty article.post.imgPath5}) {
+				imgPathList.push('${article.post.imgPath5}');
+			}
+			//console.log(imgPathList);
+			
+			// 화살표 방향에 따른 그림 바꾸기
+			if (direction == 'leftArrow') { // 왼쪽 화살표
+				pathNum = pathNum - 1;
+				if (pathNum < 1) {
+					pathNum = imgPathList.length;
+					//console.log(pathNum);
+				}
+				
+				$('#postImg').attr("src", imgPathList[pathNum - 1]); // 이미지 src 변경
+				$('#postImg').data("path-number", pathNum); // 이미지의 data값 변경
+				
+			} else if (direction == 'rightArrow') { // 오른쪽 화살표
+				pathNum = pathNum + 1;
+				if (pathNum > imgPathList.length) {
+					pathNum = 1;
+				}
+				
+				$('#postImg').attr("src", imgPathList[pathNum - 1]);
+				$('#postImg').data("path-number", pathNum);
+			}
+			
+		}); // 화살표 클릭이벤트 끝
 		
 		// 관심 토글버튼
 		$('#interestToggle').on('click', function(e) {
