@@ -47,6 +47,9 @@ public class UserEntity {
 	
 	private String type;   // 외부 API 로그인 할 경우를 위한 컬럼
 	
+	@Column(name = "typeId")
+	private Long typeId; // 외부 사이트의 회원에 대한 id pk값
+	
 	@UpdateTimestamp
 	@Column(name = "createdAt", updatable = false)
 	private ZonedDateTime createdAt;

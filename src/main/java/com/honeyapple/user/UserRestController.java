@@ -70,6 +70,7 @@ public class UserRestController {
 			session.setAttribute("userId", user.getId());
 			session.setAttribute("userLoginId", user.getLoginId());
 			session.setAttribute("userNickname", user.getNickname());
+			session.setAttribute("userProfileImagePath", user.getProfileImagePath());
 		} else {
 			result.put("code", 500);
 			result.put("error_message", "회원정보를 DB에 저장하는데 실패했습니다.");

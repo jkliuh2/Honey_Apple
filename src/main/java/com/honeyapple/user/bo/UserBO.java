@@ -60,16 +60,34 @@ public class UserBO {
 	////////////////////////////////////////////////////////// API 관련 메소드들
 	
 	// 카카오 회원가입
-	public UserEntity addUserKakao(KakaoAccount kakaoAccount) {
-		UserEntity user = UserEntity.builder()
-				.nickname(kakaoAccount.getProfile().getNickname())
+	public UserEntity signKakao(Long typeId, KakaoAccount kakaoAccount) {
+		// 1. 유저가 존재하는 지 확인, 존재하면 해당 유저정보 리턴
+		UserEntity user = userRepository.findByTypeAndTypeId("카카오", typeId);
+		if (user != null) {
+			return user;
+		}
+		
+		// 2. 유저가 존재하지 않으면, 회원가입 후 리턴.
+		// 로그인 아이디 랜덤으로 설정하기(로그인 아이디는 필요함)
+		String loginId = null;
+		while (true) {
+			loginId = "kakao_" + ((int)(Math.random() * 999999) + 1);
+			if (getUserEntityByLoginId(loginId) == null) {
+				break;
+			}
+		}
+		
+		// 랜덤 loginId, 닉네임(카카오) + 프로필 사진(카카오)으로 회원가입
+		user = UserEntity.builder()
+				.loginId(loginId)
+				.nickname("kakao_" + kakaoAccount.getProfile().getNickname())
 				.profileImagePath(kakaoAccount.getProfile_image_needs_agreement() ? 
 								kakaoAccount.getProfile().getThumbnail_image_url() : null)
+				.type("카카오") // 타입: 카카오
+				.typeId(typeId) // 카카오 계정 확인용 ID값
 				.build();
 		
-		userRepository.save(user);
-		log.info("#### 카카오 회원가입 완료");
-		return user;
+		return userRepository.save(user);
 	}
 
 	// 회원가입

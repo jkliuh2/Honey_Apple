@@ -17,6 +17,7 @@ public class User {
 	private String hometown;
 	private Double temperature = 36.5;
 	private String type; 
+	private Long typeId;
 	private Date createdAt;
 	private Date updatedAt;
 }
