@@ -4,9 +4,8 @@ import lombok.Data;
 
 @Data
 public class KakaoAccount {
-    private Boolean has_email;
-    private Boolean email_needs_agreement;
-    private Boolean is_email_valid;
-    private Boolean is_email_verified;
-    private String email;
+	private Boolean profile_needs_agreement; // 프로필 정보 제공가능 동의
+	private Boolean profile_nickname_needs_agreement; // 닉네임 제공가능 동의
+	private Boolean profile_image_needs_agreement; // 프로필 사진 제공가능 동의
+	private Profile profile; // 프로필 정보(닉네임, 프로필 사진)
 }

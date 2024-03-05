@@ -39,7 +39,7 @@ public class KakaoController {
 		KakaoUserInfoResponse userInfo = kakaoUserInfo.getUserInfo(kakaoTokenResponse.getAccess_token());
 		
 		log.info("$$$$$ 카카오 로그인 3. 가져온 사용자 정보로 회원가입 실행");
-		userBO.kakaoUser(userInfo.getKakao_account().getEmail());		
+		userBO.addUserKakao(userInfo.getKakao_account());		
 		return "okay";
 	}
 }

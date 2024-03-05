@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.honeyapple.common.FileManagerService;
+import com.honeyapple.kakao.dto.KakaoAccount;
 import com.honeyapple.user.domain.User;
 import com.honeyapple.user.entity.UserEntity;
 import com.honeyapple.user.mapper.UserMapper;
@@ -59,10 +60,13 @@ public class UserBO {
 	////////////////////////////////////////////////////////// API 관련 메소드들
 	
 	// 카카오 회원가입
-	public UserEntity kakaoUser(String email) {
+	public UserEntity addUserKakao(KakaoAccount kakaoAccount) {
 		UserEntity user = UserEntity.builder()
-				.email(email)
+				.nickname(kakaoAccount.getProfile().getNickname())
+				.profileImagePath(kakaoAccount.getProfile_image_needs_agreement() ? 
+								kakaoAccount.getProfile().getThumbnail_image_url() : null)
 				.build();
+		
 		userRepository.save(user);
 		log.info("#### 카카오 회원가입 완료");
 		return user;
