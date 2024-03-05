@@ -98,7 +98,8 @@ public class ArticleBO {
 		article.setFilledHeart(filledHeart);
 		
 		// 채팅방 갯수
-		
+		int chatRoomCount = chatBO.getChatCountByPostId(postId);
+		article.setChatRoomCount(chatRoomCount);
 		
 		return article;
 	}

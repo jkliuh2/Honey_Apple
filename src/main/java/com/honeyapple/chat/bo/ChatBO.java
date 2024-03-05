@@ -42,6 +42,10 @@ public class ChatBO {
 			int buyerId, String tradeStatus) {
 		return chatRepository.findByBuyerIdAndTradeStatusOrderByUpdatedAtDesc(buyerId, tradeStatus);
 	}
+	// select(postId) - 채팅방 갯수
+	public int getChatCountByPostId(int postId) {
+		return chatRepository.countByPostId(postId);
+	}
 	
 	// insert
 	public ChatEntity addChat(int postId, int buyerId) {

@@ -15,4 +15,6 @@ public interface ChatRepository extends JpaRepository<ChatEntity, Integer> {
 	public List<ChatEntity> findByBuyerIdOrderByUpdatedAtDesc(int buyerId);
 	public List<ChatEntity> findByBuyerIdAndTradeStatusOrderByUpdatedAtDesc(
 			int buyerId, String tradeStatus);
+	
+	public int countByPostId(int postId);
 }

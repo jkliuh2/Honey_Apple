@@ -19,5 +19,5 @@ public class Article {
 	
 	private boolean filledHeart; // 관심 여부(로그인된 유저가 이 게시글을 관심눌렀는? 여부)
 	
-	// 채팅방 갯수(판매자를 위한 정보)
+	private int chatRoomCount; // 채팅방 갯수(판매자를 위한 정보)
 }
