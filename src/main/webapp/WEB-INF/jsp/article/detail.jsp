@@ -36,7 +36,7 @@
 				${article.user.nickname}
 			</a>
 			<div>
-				${article.user.hometown} : 아직 미정
+				<span class="hometown">${article.user.hometown}</span>
 			</div>
 		</div>
 		

@@ -74,6 +74,7 @@ public class ProfileController {
 			// 판매완료List 가져와서 담기
 			List<Article> articleList = articleBO.getArticleListBySellerIdStatus(userId, "판매완료", null);
 			model.addAttribute("articleList", articleList);
+			return "article/articleList";
 		}
 		return "profile/" + menu;
 	}

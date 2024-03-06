@@ -18,7 +18,7 @@
 				</div>
 				<%-- 판매자 위치정보 --%>
 				<div>
-					<small>${article.user.hometown} / 동네 미설정</small>
+					<small class="hometown">${article.user.hometown}</small>
 				</div>
 				<%-- 관심 수 --%>
 				<div>

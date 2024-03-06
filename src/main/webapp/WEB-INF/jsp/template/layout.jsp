@@ -42,4 +42,42 @@
 		</footer>
 	</div>
 </body>
+
+<script>
+// 주소코드 8자리 -> 주소로 변경하는 메소드
+function transHometown(selector) {
+	var code = selector.textContent;
+	let sidoCode = code.slice(0,2);
+	let sigugunCode = code.slice(2, 5);
+	let dongCode = code.slice(5);
+	
+	$.each(hangjungdong.dong, function(index, value) {
+		if (sidoCode == value.sido 
+				&& sigugunCode == value.sigugun
+				&& dongCode == value.dong) {
+			dongCode = value.codeNm;
+		}
+	});
+	$.each(hangjungdong.sigugun, function(index, value) {
+		if (sidoCode == value.sido && sigugunCode == value.sigugun) {
+			sigugunCode = value.codeNm;
+		}
+	});
+	$.each(hangjungdong.sido, function(index, value) {
+		if (sidoCode == value.sido) {
+			sidoCode = value.codeNm;
+		}
+	});
+	let str = sidoCode + " " + sigugunCode + " " + dongCode;
+	selector.innerText=str;
+} // 코드 -> 주소 변경 메소드 끝
+
+	$(document).ready(function() {
+		// user.hometown 일괄 변경하기
+		var arr = $('.hometown');
+		for (let i = 0; i < arr.length; i++) {
+			transHometown(arr[i]);
+		}
+	});
+</script>
 </html>

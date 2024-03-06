@@ -69,7 +69,8 @@
 	</div>
 	
 	<%-- 확인 버튼 --%>
-	<div class="mt-5 d-flex justify-content-end">
+	<div class="mt-5 d-flex justify-content-between">
+		<a href="/user/set-hometown-view" class="btn btn-info">우리동네 설정</a>
 		<button type="button" id="updateBtn" class="btn btn-primary">정보 수정</button>
 	</div>
 </div>

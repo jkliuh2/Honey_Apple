@@ -17,8 +17,6 @@
 				<div>
 					<fmt:formatNumber value="${chatRoomView.post.price}" />원
 				</div>
-				<%-- 주소 --%>
-				<div>부산 광안리 -- 미설정</div>
 			</div>
 		</div>
 	</div> <%-- 판매글 정보 끝 --%>

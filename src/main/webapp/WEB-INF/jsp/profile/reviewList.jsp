@@ -7,7 +7,7 @@
 	<div>
 		<img src="/static/img/blank-profile.webp" width="25" height="25" alt="프로필 이미지">
 		<small class="font-weight-bold ml-2">${reviewCard.buyer.nickname}</small>
-		<small class="ml-2">${reviewCard.buyer.hometown}(유저 동네)</small>
+		<small class="ml-2 hometown">${reviewCard.buyer.hometown}</small>
 	</div>
 	<div class="mt-2">
 		${reviewCard.review.review}
