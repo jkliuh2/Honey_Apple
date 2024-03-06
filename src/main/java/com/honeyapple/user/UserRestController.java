@@ -261,4 +261,25 @@ public class UserRestController {
 		result.put("code", 200);
 		return result;
 	}
+	
+	
+	// hometown 정보 수정
+	@PostMapping("/set-hometown")
+	public Map<String, Object> setHometown(
+			@RequestParam("sido") int sido,
+			@RequestParam("sigugun") int sigugun,
+			@RequestParam("dong") int dong,
+			HttpSession session) {
+		
+		// 세션에서 수정할 유저정보 가져오기
+		int userId = (int)session.getAttribute("userId");
+		
+		// DB - update
+		userBO.updateUserHometown(userId, sido, sigugun, dong);
+		
+		// 콜백
+		Map<String, Object> result = new HashMap<>();
+		result.put("code", 200);
+		return result;
+	}
 }

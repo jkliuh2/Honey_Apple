@@ -11,12 +11,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.honeyapple.article.bo.ArticleBO;
 import com.honeyapple.article.domain.Article;
+import com.honeyapple.user.bo.UserBO;
+import com.honeyapple.user.entity.UserEntity;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MainPageController {
 	
 	@Autowired
 	private ArticleBO articleBO;
+	
+	@Autowired
+	private UserBO userBO;
 
 	
 	/**
@@ -26,7 +33,16 @@ public class MainPageController {
 	 * @return
 	 */
 	@GetMapping("/honey-apple")
-	public String honeyApple(Model model) {
+	public String honeyApple(Model model, HttpSession session) {
+		
+		// 로그인 -> hometown 정보 없으면 동네설정 페이지로 리다이렉트 하기
+		Integer userId = (Integer)session.getAttribute("userId");
+		if (userId != null) {
+			UserEntity user = userBO.getUserEntityById(userId);
+			if (user.getHometown() == null) {
+				return "redirect:/user/set-hometown-view";
+			}
+		}
 		
 		// List<Article> 가져오기
 		List<Article> articleList = articleBO.getArticleList();

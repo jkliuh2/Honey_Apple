@@ -185,4 +185,18 @@ public class UserBO {
 		// 업데이트로 변경된 user 정보 리턴하기
 		return userMapper.selectUserById(userId);
 	}
+	
+	
+	// 유저 hometown 수정
+	public void updateUserHometown(int userId, int sido, int sigugun, int dong) {
+		// 수정할 유저 데이터 select
+		UserEntity user = getUserEntityById(userId);
+		
+		// parameter로 들어온 세개의 주소코드값 하나로 merge
+		String hometown = hometownBO.codeMerge(sido, sigugun, dong);
+		
+		userRepository.save(user.toBuilder()
+				.hometown(hometown)
+				.build());
+	}
 }
