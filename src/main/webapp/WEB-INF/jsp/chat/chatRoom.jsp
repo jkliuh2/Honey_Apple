@@ -9,7 +9,7 @@
 		<%-- 게시글 간략 정보 --%>
 		<div class="d-flex">
 			<div class="d-flex align-items-center mr-2">
-				<img src="/static/img/test-img.webp" width="60" height="60">
+				<img src="${chatRoomView.post.imgPath1}" width="60" height="60">
 			</div>
 			<div>
 				<%-- 제목 --%>
@@ -32,7 +32,17 @@
 			<%-- 판매자 정보 --%>
 			<c:if test="${chatRoomView.buyer.id eq userId}">
 			<div class="d-flex align-items-center mr-2">
-				<img src="/static/img/blank-profile.webp" width="60" height="60">
+				
+				<img src=
+				<c:choose>
+					<c:when test="${empty chatRoomView.seller.profileImagePath}">
+					"/static/img/blank-profile.webp"
+					</c:when>
+					<c:otherwise>
+					"${chatRoomView.seller.profileImagePath}"
+					</c:otherwise>
+				</c:choose>
+				 width="60" height="60">
 			</div>
 			<div>
 				<div class="font-weight-bold">
