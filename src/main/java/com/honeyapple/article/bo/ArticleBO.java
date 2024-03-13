@@ -157,6 +157,11 @@ public class ArticleBO {
 			for (ChatEntity chat : chatList) {
 				// post 설정
 				Post post = postBO.getPostById(chat.getPostId());
+				
+				// 판매 완료된 경우 제외
+				if (post.getStatus().equals("판매완료")) {
+					continue;
+				}
 				postList.add(post);
 			}
 		} else if (menu.equals("reservationList")) { // 예약중인 글
@@ -171,7 +176,7 @@ public class ArticleBO {
 			}
 		} else if (menu.equals("purchaseComplete")) { // 구매완료 글
 			// buyerId + "완료" 상태 채팅방 리스트(updatedAt 최신순 정렬)
-			List<ChatEntity> chatList = chatBO.getChatEntityListByBuyerIdTradeStatusDesc(buyerId, "예약");
+			List<ChatEntity> chatList = chatBO.getChatEntityListByBuyerIdTradeStatusDesc(buyerId, "완료");
 			
 			// chat의 postId로 postList 세팅하기
 			for (ChatEntity chat : chatList) {

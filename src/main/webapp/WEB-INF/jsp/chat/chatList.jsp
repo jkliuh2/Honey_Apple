@@ -6,7 +6,8 @@
 	<c:forEach items="${chatRoomViewList}" var="chatRoomView">
 	<div class="d-flex mt-3">
 		<%-- 구매자 정보 --%>
-		<div class="col-5 d-flex">
+		<div class="col-5">
+			<a href="/profile?userId=${chatRoomView.buyer.id}" class="d-flex text-dark">
 			<%-- 구매자 프로필사진 --%>
 			<div class="mr-2">
 				<img src="/static/img/blank-profile.webp" width="70" height="70">
@@ -18,6 +19,7 @@
 				<div>매너온도</div>
 				<div class="font-weight-bold">${chatRoomView.buyer.temperature}°C</div>
 			</div>
+			</a>
 		</div>
 		
 		<%-- 가장 마지막 채팅 메시지 --%>
@@ -45,6 +47,9 @@
 		<div class="col-1 d-flex justify-content-center align-items-center">
 			<c:if test="${chatRoomView.chat.tradeStatus eq '예약'}">
 			<span class="font-weight-bold">예약</span>
+			</c:if>
+			<c:if test="${chatRoomView.chat.tradeStatus eq '완료'}">
+			<span class="font-weight-bold">판매완료</span>
 			</c:if>
 		</div>
 	</div>
