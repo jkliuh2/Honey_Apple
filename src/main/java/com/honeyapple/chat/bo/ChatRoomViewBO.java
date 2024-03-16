@@ -36,7 +36,7 @@ public class ChatRoomViewBO {
 	public ChatRoomView getChatRoomViewByChatIdBuyerId(int chatId, int buyerId) {
 		ChatRoomView chatRoomView = new ChatRoomView();
 		ChatEntity chat = chatBO.getChatEntityByChatIdBuyerId(chatId, buyerId);
-		if (chat == null) {
+		if (chat == null || !chat.getTradeStatus().equals("예약")) {
 			return null;
 		}
 		Post post = postBO.getPostById(chat.getPostId());

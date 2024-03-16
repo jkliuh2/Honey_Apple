@@ -47,6 +47,13 @@
 // 주소코드 8자리 -> 주소로 변경하는 메소드
 function transHometown(selector) {
 	var code = selector.textContent;
+	
+	
+	// 이미 주소정보를 수정 했다면 함수 작동 취소
+	if (code.length > 8) {
+		continue;
+	}
+	
 	let sidoCode = code.slice(0,2);
 	let sigugunCode = code.slice(2, 5);
 	let dongCode = code.slice(5);

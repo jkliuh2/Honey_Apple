@@ -7,62 +7,78 @@
 	<%-- 게시글 및 판매자 정보(header) --%>
 	<div id="chat-room-header" class="d-flex justify-content-between align-items-center">
 		<%-- 게시글 간략 정보 --%>
-		<div class="d-flex">
-			<div class="d-flex align-items-center mr-2">
-				<img src="/static/img/test-img.webp" width="60" height="60">
-			</div>
-			<div>
-				<%-- 제목 --%>
-				<div class="font-weight-bold">
-					${chatRoomView.post.subject}
+		<a href="/article/detail-view?postId=${chatRoomView.post.id}">
+			<div class="d-flex text-dark">
+				<div class="d-flex align-items-center mr-2">
+					<img src="${chatRoomView.post.imgPath1}" width="60" height="60">
 				</div>
-				<%-- 가격 --%>
 				<div>
-					<fmt:formatNumber value="${chatRoomView.post.price}" />원
+					<%-- 제목 --%>
+					<div class="font-weight-bold">
+						${chatRoomView.post.subject}
+					</div>
+					<%-- 가격 --%>
+					<div>
+						<fmt:formatNumber value="${chatRoomView.post.price}" />원
+					</div>
+					<%-- 주소 --%>
+					<div>
+						<span class="hometown">${chatRoomView.seller.hometown}</span>
+					</div>
 				</div>
-				<%-- 주소 --%>
-				<div>
-					<span class="hometown">${chatRoomView.seller.hometown}</span>
-				</div>
-			</div>
-		</div> <%-- 게시글 정보 끝 --%>
+			</div> <%-- 게시글 정보 끝 --%>
+		</a>
 		
 		<%-- 상대 유저 정보 --%>
-		<div class="d-flex">
+		<div>
 			<%-- 판매자 정보 --%>
 			<c:if test="${chatRoomView.buyer.id eq userId}">
-			<div class="d-flex align-items-center mr-2">
-				<img src="/static/img/blank-profile.webp" width="60" height="60">
-			</div>
-			<div>
-				<div class="font-weight-bold">
-					판매자 : ${chatRoomView.seller.nickname}
+			<a href="/profile?userId=${chatRoomView.seller.id}" class="d-flex text-dark">
+				<div class="d-flex align-items-center mr-2">
+					
+					<img src=
+					<c:choose>
+						<c:when test="${empty chatRoomView.seller.profileImagePath}">
+						"/static/img/blank-profile.webp"
+						</c:when>
+						<c:otherwise>
+						"${chatRoomView.seller.profileImagePath}"
+						</c:otherwise>
+					</c:choose>
+					 width="60" height="60">
 				</div>
 				<div>
-					매너온도
+					<div class="font-weight-bold">
+						판매자 : ${chatRoomView.seller.nickname}
+					</div>
+					<div>
+						매너온도
+					</div>
+					<div>
+						${chatRoomView.seller.temperature}°C
+					</div>
 				</div>
-				<div>
-					${chatRoomView.seller.temperature}°C
-				</div>
-			</div>
+			</a>
 			</c:if> <%-- 판매자 정보 끝 --%>
 			
 			<%-- 구매자 정보 --%>
 			<c:if test="${chatRoomView.seller.id eq userId}">
-			<div class="d-flex align-items-center mr-2">
-				<img src="/static/img/blank-profile.webp" width="60" height="60">
-			</div>
-			<div>
-				<div class="font-weight-bold">
-					구매자 : ${chatRoomView.buyer.nickname}
+			<a href="/profile?userId=${chatRoomView.buyer.id}" class="d-flex text-dark">
+				<div class="d-flex align-items-center mr-2">
+					<img src="/static/img/blank-profile.webp" width="60" height="60">
 				</div>
 				<div>
-					매너온도
+					<div class="font-weight-bold">
+						구매자 : ${chatRoomView.buyer.nickname}
+					</div>
+					<div>
+						매너온도
+					</div>
+					<div>
+						${chatRoomView.buyer.temperature}°C
+					</div>
 				</div>
-				<div>
-					${chatRoomView.buyer.temperature}°C
-				</div>
-			</div>
+			</a>
 			</c:if> <%-- 구매자정보 끝 --%>
 		</div>
 	</div> <%-- header 끝 --%>
