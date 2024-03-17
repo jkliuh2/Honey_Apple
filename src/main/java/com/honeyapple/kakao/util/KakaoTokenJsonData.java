@@ -16,7 +16,7 @@ public class KakaoTokenJsonData {
 	
 	private final WebClient webClient;
 	private static final String TOKEN_URI = "https://kauth.kakao.com/oauth/token";
-	private static final String REDIRECT_URI = "http://localhost/oauth";
+	private static final String REDIRECT_URI = "http://43.201.66.155:8080/oauth";
 	private static final String GRANT_TYPE = "authorization_code";
 	private static final String CLIENT_ID = "e69c8cb6c6982e89cceb6b10f29ea504"; // Rest API 키
 	
